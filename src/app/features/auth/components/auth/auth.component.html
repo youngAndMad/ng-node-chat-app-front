@@ -29,7 +29,7 @@
     <div class="user_options-forms" id="user_options-forms">
       <div class="user_forms-login">
         <h2 class="forms_title">Login</h2>
-        <form class="forms_form">
+        <form class="forms_form" [formGroup]="loginForm">
           <fieldset class="forms_fieldset">
             <div class="forms_field">
               <input
@@ -38,6 +38,7 @@
                 class="forms_field-input"
                 required
                 autofocus
+                formControlName="email"
               />
             </div>
             <div class="forms_field">
@@ -46,6 +47,7 @@
                 placeholder="Password"
                 class="forms_field-input"
                 required
+                formControlName="password"
               />
             </div>
           </fieldset>
@@ -59,14 +61,15 @@
       </div>
       <div class="user_forms-signup">
         <h2 class="forms_title">Register</h2>
-        <form class="forms_form">
+        <form class="forms_form" [formGroup]="registrationForm">
           <fieldset class="forms_fieldset">
             <div class="forms_field">
               <input
                 type="text"
-                placeholder="Full Name"
+                placeholder="Username"
                 class="forms_field-input"
                 required
+                formControlName="username"
               />
             </div>
             <div class="forms_field">
@@ -75,6 +78,7 @@
                 placeholder="Email"
                 class="forms_field-input"
                 required
+                formControlName="email"
               />
             </div>
             <div class="forms_field">
@@ -83,6 +87,7 @@
                 placeholder="Password"
                 class="forms_field-input"
                 required
+                formControlName="password"
               />
             </div>
           </fieldset>
