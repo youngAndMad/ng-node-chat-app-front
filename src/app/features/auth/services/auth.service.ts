@@ -19,7 +19,7 @@ export class AuthService {
     this._http.post<TokenDto>('/api/v1/user/login', dto);
 
   confirmEmail = (dto: ConfirmEmailDto): Observable<TokenDto> =>
-    this._http.post<TokenDto>('/api/v1/user/comfirm-email', dto);
+    this._http.post<TokenDto>('/api/v1/user/confirm-email', dto);
 
   refreshToken = (token: string): Observable<TokenDto> =>
     this._http.post<TokenDto>(

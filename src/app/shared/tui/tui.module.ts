@@ -19,11 +19,13 @@ import { TuiDataListWrapperModule } from '@taiga-ui/kit';
 import { TuiCalendarModule } from '@taiga-ui/core';
 import { TuiSelectModule } from '@taiga-ui/kit';
 import { TuiInputDateModule } from '@taiga-ui/kit';
+import { TuiDialogModule } from '@taiga-ui/core';
 
 const modules: any[] = [
   TuiLinkModule,
   TuiSelectModule,
   CommonModule,
+  TuiDialogModule,
   TuiInputDateModule,
   TuiCalendarModule,
   TuiDataListWrapperModule,

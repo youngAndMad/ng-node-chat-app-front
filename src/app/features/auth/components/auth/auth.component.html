@@ -30,72 +30,74 @@
       <div class="user_forms-login">
         <h2 class="forms_title">Login</h2>
         <form class="forms_form" [formGroup]="loginForm">
-          <fieldset class="forms_fieldset">
-            <div class="forms_field">
-              <input
-                type="email"
-                placeholder="Email"
-                class="forms_field-input"
-                required
-                autofocus
-                formControlName="email"
-              />
-            </div>
-            <div class="forms_field">
-              <input
-                type="password"
-                placeholder="Password"
-                class="forms_field-input"
-                required
-                formControlName="password"
-              />
-            </div>
-          </fieldset>
+          <div class="forms_field">
+            <input
+              type="email"
+              placeholder="Email"
+              class="forms_field-input"
+              required
+              autofocus
+              formControlName="email"
+            />
+          </div>
+          <div class="forms_field">
+            <input
+              type="password"
+              placeholder="Password"
+              class="forms_field-input"
+              required
+              formControlName="password"
+            />
+          </div>
           <div class="forms_buttons">
             <button type="button" class="forms_buttons-forgot">
               Forgot password?
             </button>
-            <input type="submit" value="Log In" class="forms_buttons-action" />
+            <input
+              type="submit"
+              value="Log In"
+              class="forms_buttons-action"
+              (click)="onLoginFormSubmit()"
+            />
           </div>
         </form>
       </div>
       <div class="user_forms-signup">
         <h2 class="forms_title">Register</h2>
         <form class="forms_form" [formGroup]="registrationForm">
-          <fieldset class="forms_fieldset">
-            <div class="forms_field">
-              <input
-                type="text"
-                placeholder="Username"
-                class="forms_field-input"
-                required
-                formControlName="username"
-              />
-            </div>
-            <div class="forms_field">
-              <input
-                type="email"
-                placeholder="Email"
-                class="forms_field-input"
-                required
-                formControlName="email"
-              />
-            </div>
-            <div class="forms_field">
-              <input
-                type="password"
-                placeholder="Password"
-                class="forms_field-input"
-                required
-                formControlName="password"
-              />
-            </div>
-          </fieldset>
+          <div class="forms_field">
+            <input
+              type="text"
+              placeholder="Username"
+              class="forms_field-input"
+              required
+              formControlName="username"
+            />
+          </div>
+          <div class="forms_field">
+            <input
+              type="email"
+              placeholder="Email"
+              class="forms_field-input"
+              required
+              formControlName="email"
+            />
+          </div>
+          <div class="forms_field">
+            <input
+              type="password"
+              placeholder="Password"
+              class="forms_field-input"
+              required
+              formControlName="password"
+            />
+          </div>
           <div class="forms_buttons">
             <input
               type="submit"
               value="Register"
               class="forms_buttons-action"
+              (click)="onRegistrationFormSubmit()"
             />
           </div>
         </form>
@@ -103,3 +105,25 @@
     </div>
   </div>
 </section>
+<button
+  hidden="true"
+  id="hiddenOtpButton"
+  (click)="showDialog(otpModal)"
+></button>
+
+<ng-template #otpModal let-observer>
+  <div>
+    We have sent a One-Time Password (OTP) to your registered email address .
+    Please check your inbox and enter the OTP below to confirm your email.
+  </div>
+  <form class="form" [formGroup]="otpForm">
+    <tui-input
+      formControlName="otp"
+      type="text"
+      placeholder="One time password"
+    >
+      One time password
+      <input inputmode="numeric" tuiTextfield
+    /></tui-input>
+  </form>
+</ng-template>
