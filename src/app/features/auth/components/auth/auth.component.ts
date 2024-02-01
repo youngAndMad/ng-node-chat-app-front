@@ -69,7 +69,9 @@ export class AuthComponent implements OnInit {
 
   onLoginFormSubmit() {
     console.log(this.loginForm.value);
-    this._authService.login(this.loginForm.value).subscribe(console.log);
+    this._authService.login(this.loginForm.value).subscribe((response) => {
+      this._localStorageService.setItem('tokens', response);
+    });
   }
 
   onRegistrationFormSubmit() {
