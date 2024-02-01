@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { debounceTime } from 'rxjs/operators';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 
 @Component({
   selector: 'app-auth',
@@ -24,7 +25,8 @@ export class AuthComponent implements OnInit {
   constructor(
     private readonly _fb: FormBuilder,
     private readonly _authService: AuthService,
-    @Inject(TuiDialogService) private readonly dialogs: TuiDialogService
+    @Inject(TuiDialogService) private readonly _dialogs: TuiDialogService,
+    private readonly _localStorageService: LocalStorageService
   ) {
     this.loginForm = this._fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -82,7 +84,7 @@ export class AuthComponent implements OnInit {
   }
 
   showDialog(content: PolymorpheusContent<TuiDialogContext>): void {
-    this.dialogs.open(content).subscribe();
+    this._dialogs.open(content).subscribe();
   }
 
   setupOtpChangeHandler() {
@@ -97,7 +99,7 @@ export class AuthComponent implements OnInit {
               email: this.registrationForm.get('email')!.value,
             })
             .subscribe((response) => {
-              console.log('confirm email response', response);
+              this._localStorageService.setItem('tokens', response);
             });
         }
       });
