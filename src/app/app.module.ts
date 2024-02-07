@@ -11,6 +11,7 @@ import { AuthModule } from './features/auth/auth.module';
 import { TuiModule } from './shared/tui/tui.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './shared/components/home/home.component';
+import { ChatModule } from './features/chat/chat.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -22,6 +23,7 @@ import { HomeComponent } from './shared/components/home/home.component';
     AuthModule,
     BrowserAnimationsModule,
     FileModule,
+    ChatModule,
   ],
   providers: [
     { useClass: ApiInterceptor, multi: true, provide: HTTP_INTERCEPTORS },

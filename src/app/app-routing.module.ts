@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './shared/components/home/home.component';
-import { EmailVerifiedGuard } from './common/guard/email-verified.guard.guard';
+import { EmailVerifiedGuard } from './common/guard/email-verified.guard';
 
 const routes: Routes = [
   {
