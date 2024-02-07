@@ -23,6 +23,8 @@
     "@taiga-ui/icons": "^3.64.0",
     "@taiga-ui/kit": "^3.64.0",
     "rxjs": "~7.8.0",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
     "taiga-ui": "^3.64.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
