@@ -10,9 +10,10 @@ import { FileModule } from './features/file/file.module';
 import { AuthModule } from './features/auth/auth.module';
 import { TuiModule } from './shared/tui/tui.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HomeComponent } from './shared/components/home/home.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -10,6 +10,8 @@ import { debounceTime } from 'rxjs/operators';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -22,11 +24,14 @@ export class AuthComponent implements OnInit {
   registrationForm: FormGroup;
   otpForm: FormGroup;
 
+  dialogSubscription: Subscription;
+
   constructor(
     private readonly _fb: FormBuilder,
     private readonly _authService: AuthService,
     @Inject(TuiDialogService) private readonly _dialogs: TuiDialogService,
-    private readonly _localStorageService: LocalStorageService
+    private readonly _localStorageService: LocalStorageService,
+    private readonly _router: Router
   ) {
     this.loginForm = this._fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -68,25 +73,24 @@ export class AuthComponent implements OnInit {
   }
 
   onLoginFormSubmit() {
-    console.log(this.loginForm.value);
     this._authService.login(this.loginForm.value).subscribe((response) => {
       this._localStorageService.setItem('tokens', response);
     });
   }
 
   onRegistrationFormSubmit() {
-    console.log(this.registrationForm.value);
     this._authService
       .register(this.registrationForm.value)
-      .subscribe((success) => {
-        if (success) {
+      .subscribe((user) => {
+        if (user) {
+          this._localStorageService.setProfile(user);
           document.getElementById('hiddenOtpButton')?.click();
         }
       });
   }
 
   showDialog(content: PolymorpheusContent<TuiDialogContext>): void {
-    this._dialogs.open(content).subscribe();
+    this.dialogSubscription = this._dialogs.open(content).subscribe();
   }
 
   setupOtpChangeHandler() {
@@ -94,6 +98,7 @@ export class AuthComponent implements OnInit {
       .get('otp')
       ?.valueChanges.pipe(debounceTime(1000))
       .subscribe((otpValue: string) => {
+        console.log('new otp input ', otpValue);
         if (otpValue.length === 6) {
           this._authService
             .confirmEmail({
@@ -102,6 +107,13 @@ export class AuthComponent implements OnInit {
             })
             .subscribe((response) => {
               this._localStorageService.setItem('tokens', response);
+              const profile = this._localStorageService.getProfile();
+              profile.emailVerified = true;
+              this._localStorageService.setProfile(profile);
+              this.dialogSubscription.unsubscribe();
+              this._router.navigate(['/home']).then(() => {
+                console.log('redirect to home page');
+              });
             });
         }
       });

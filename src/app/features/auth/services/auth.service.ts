@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { LoginDto } from '../model/login.dto';
 import { TokenDto } from '../model/token.dto';
 import { ConfirmEmailDto } from '../model/confirm-email.dto';
+import { User } from 'src/app/common/model/user';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,8 @@ import { ConfirmEmailDto } from '../model/confirm-email.dto';
 export class AuthService {
   constructor(private readonly _http: HttpClient) {}
 
-  register = (dto: RegistrationDto): Observable<boolean> =>
-    this._http.post<boolean>('/api/v1/user/register', dto);
+  register = (dto: RegistrationDto): Observable<User> =>
+    this._http.post<User>('/api/v1/user/register', dto);
 
   login = (dto: LoginDto): Observable<TokenDto> =>
     this._http.post<TokenDto>('/api/v1/user/login', dto);
