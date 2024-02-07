@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TuiRootModule } from '@taiga-ui/core';
+import { FileModule } from './features/file/file.module';
 import { AuthModule } from './features/auth/auth.module';
 import { TuiModule } from './shared/tui/tui.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -19,6 +20,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     TuiRootModule,
     AuthModule,
     BrowserAnimationsModule,
+    FileModule,
   ],
   providers: [
     { useClass: ApiInterceptor, multi: true, provide: HTTP_INTERCEPTORS },
