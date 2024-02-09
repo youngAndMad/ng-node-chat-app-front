@@ -138,16 +138,23 @@
   </aside>
   <main>
     <header>
-      <img
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"
-        alt=""
-      />
-      <div>
+      <div class="flex">
+        <img
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"
+          alt=""
+        />
         <h2>Vincent</h2>
         <h3>10:12AM, Today</h3>
       </div>
-      <div>
-        <button (click)="showDialog(editProfile)">Hello world</button>
+      <div
+        (click)="showDialog(editProfile)"
+        class="justify-items-end flex justify-end"
+      >
+        <img
+          src="https://avatars.mds.yandex.net/i?id=2d37b2c410aff8df7736dea1052cd36fb2a59625-7904189-images-thumbs&n=13"
+          height="40px"
+          class="block float-right"
+        />
       </div>
     </header>
     <ul id="chat">
@@ -232,15 +239,28 @@
   </main>
 </div>
 <ng-template let-observed #editProfile>
-  <form [formGroup]="editProfileForm" (submit)="onEditUsername()">
+  <form
+    [formGroup]="editProfileForm"
+    (submit)="onEditUsername()"
+    class="flex justify-center items-center"
+  >
     <tui-avatar
       fallback="tuiIconUserLarge"
       new
-      class="tui-space_left-3 avatar"
-      avatarUrl="https://avatars.githubusercontent.com/u/113981956?v=4"
+      class="tui-space_left-3 avatar inline-block"
+      [avatarUrl]="imageLink(user.id)"
       [size]="'xl'"
+      (click)="fileInput.click()"
     >
+      <input
+        hidden
+        #fileInput
+        class="w-100 h-100"
+        type="file"
+        (change)="onFileSelected($event)"
+      />
     </tui-avatar>
+
     <div class="tui-form__row">
       <tui-input formControlName="username" tuiHintContent="Username">
         Username

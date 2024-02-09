@@ -4,6 +4,7 @@ import {
   Component,
   Inject,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { SocketIoService } from '../service/socket-io.service';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
@@ -13,6 +14,8 @@ import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../user/services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { FileService } from '../../file/services/file.service';
+import { EnvService } from 'src/app/common/service/env.service';
 
 @Component({
   selector: 'app-chat',
@@ -24,6 +27,7 @@ export class ChatComponent implements OnInit {
   editProfileSubscription: Subscription;
   user: User;
   editProfileForm: FormGroup;
+  @ViewChild('fileInput') fileInput: any;
 
   constructor(
     private readonly _socketIoService: SocketIoService,
@@ -31,7 +35,9 @@ export class ChatComponent implements OnInit {
     private readonly _localStorageService: LocalStorageService,
     private readonly _fb: FormBuilder,
     private readonly _userService: UserService,
-    private readonly _toast: ToastrService
+    private readonly _toast: ToastrService,
+    private readonly _fileService: FileService,
+    private readonly _envService: EnvService
   ) {}
 
   ngOnInit(): void {
@@ -76,4 +82,17 @@ export class ChatComponent implements OnInit {
       });
     });
   }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this._fileService
+        .uploadUserAvatar(this.user.id, file)
+        .subscribe((response) => {
+          console.log('Avatar uploaded successfully:', response);
+        });
+    }
+  }
+
+  imageLink = (id: number): string => this._fileService.imageLink(id);
 }

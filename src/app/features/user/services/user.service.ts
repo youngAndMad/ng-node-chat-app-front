@@ -11,4 +11,5 @@ export class UserService {
 
   editUsername = (id: number, username: string): Observable<User> =>
     this._http.patch<User>(`/api/v1/user/${id}`, {}, { params: { username } });
+  
 }
