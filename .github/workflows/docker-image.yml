@@ -18,10 +18,10 @@ jobs:
           node-version: "20.10.0"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Install Angular CLI
-        run: npm install -g @angular/cli
+        run: npm install -g @angular/cli@15.2.10
 
       - name: Run Angular build
         run: ng build --configuration production
