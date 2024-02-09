@@ -146,6 +146,9 @@
         <h2>Vincent</h2>
         <h3>10:12AM, Today</h3>
       </div>
+      <div>
+        <button (click)="showDialog(editProfile)">Hello world</button>
+      </div>
     </header>
     <ul id="chat">
       <li class="you">
@@ -229,5 +232,38 @@
   </main>
 </div>
 <ng-template let-observed #editProfile>
-  
+  <form [formGroup]="editProfileForm">
+    <tui-avatar
+      fallback="tuiIconUserLarge"
+      new
+      class="tui-space_left-3 avatar"
+      avatarUrl="https://avatars.githubusercontent.com/u/113981956?v=4"
+      [size]="'xl'"
+    >
+    </tui-avatar>
+    <div class="tui-form__row">
+      <tui-input formControlName="username" tuiHintContent="Username">
+        Username
+        <input tuiTextfield [required]="true" />
+        <span class="tui-required"></span>
+      </tui-input>
+      <tui-error
+        formControlName="username "
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </div>
+
+    <div class="tui-form__buttons">
+      <button
+        size="s"
+        tuiButton
+        type="submit"
+        class="tui-form__button"
+        [class.tui-skeleton_light]="false"
+        [class.tui-skeleton]="false"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
 </ng-template>

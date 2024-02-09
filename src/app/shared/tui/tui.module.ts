@@ -19,6 +19,7 @@ import { TuiDataListWrapperModule } from '@taiga-ui/kit';
 import { TuiCalendarModule } from '@taiga-ui/core';
 import { TuiSelectModule } from '@taiga-ui/kit';
 import { TuiInputDateModule } from '@taiga-ui/kit';
+import { TuiSvgModule } from '@taiga-ui/core';
 import { TuiDialogModule } from '@taiga-ui/core';
 
 const modules: any[] = [
@@ -32,6 +33,7 @@ const modules: any[] = [
   TuiTextfieldControllerModule,
   TuiInputSliderModule,
   TuiInputNumberModule,
+  TuiSvgModule,
   TuiFilesModule,
   TuiTextareaModule,
   TuiErrorModule,

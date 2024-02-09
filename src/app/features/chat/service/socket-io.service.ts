@@ -11,7 +11,7 @@ export class SocketIoService {
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
 
   constructor(private readonly _envService: EnvService) {
-    this.socket = io(this._envService.socketUrl);
+    // this.socket = io(this._envService.socketUrl);
   }
 
   sendMessage(message: any) {
@@ -20,9 +20,9 @@ export class SocketIoService {
   }
 
   getNewMessage = () => {
-    this.socket.on('message', (message) => {
-      this.message$.next(message);
-    });
+    // this.socket.on('message', (message) => {
+    //   this.message$.next(message);
+    // });
 
     return this.message$.asObservable();
   };

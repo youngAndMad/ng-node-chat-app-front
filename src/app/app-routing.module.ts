@@ -7,7 +7,12 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    canActivate: [EmailVerifiedGuard]
+    canActivate: [EmailVerifiedGuard],
+  },
+  {
+    path: '',
+    redirectTo: 'home', // Redirect empty path to 'home'
+    pathMatch: 'full',
   },
 ];
 
