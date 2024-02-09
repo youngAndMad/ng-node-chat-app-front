@@ -75,6 +75,10 @@ export class AuthComponent implements OnInit {
   onLoginFormSubmit() {
     this._authService.login(this.loginForm.value).subscribe((response) => {
       this._localStorageService.setItem('tokens', response);
+
+      this._router.navigate(['/home']).then(() => {
+        console.log('redirect to home page');
+      });
     });
   }
 

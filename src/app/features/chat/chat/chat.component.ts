@@ -8,14 +8,13 @@ import {
 } from '@angular/core';
 import { SocketIoService } from '../service/socket-io.service';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, catchError } from 'rxjs';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../user/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from '../../file/services/file.service';
-import { EnvService } from 'src/app/common/service/env.service';
 
 @Component({
   selector: 'app-chat',
@@ -27,7 +26,6 @@ export class ChatComponent implements OnInit {
   editProfileSubscription: Subscription;
   user: User;
   editProfileForm: FormGroup;
-  @ViewChild('fileInput') fileInput: any;
 
   constructor(
     private readonly _socketIoService: SocketIoService,
@@ -36,15 +34,27 @@ export class ChatComponent implements OnInit {
     private readonly _fb: FormBuilder,
     private readonly _userService: UserService,
     private readonly _toast: ToastrService,
-    private readonly _fileService: FileService,
-    private readonly _envService: EnvService
+    private readonly _fileService: FileService
   ) {}
 
   ngOnInit(): void {
     this.user = this._localStorageService.getProfile();
-    this._socketIoService.getNewMessage().subscribe((msg) => {
-      console.log(msg);
-    });
+    this._socketIoService.connect();
+    this._socketIoService.isConnected
+      .pipe(
+        catchError((error: any) => {
+          console.error('Error connecting to socket:', error);
+          return new Observable<never>();
+        })
+      )
+      .subscribe((isConnected) => {
+        if (isConnected === true) {
+          console.log('isConnected', isConnected);
+          this._socketIoService.getNewMessage().subscribe((msg) => {
+            console.log(msg);
+          });
+        }
+      });
   }
 
   showDialog(content: PolymorpheusContent<TuiDialogContext>): void {
@@ -54,6 +64,7 @@ export class ChatComponent implements OnInit {
         [Validators.required, Validators.minLength(4)],
       ],
     });
+
     this.editProfileSubscription = this._dialogs
       .open(content, { size: 's', label: 'Edit profile' })
       .subscribe();
