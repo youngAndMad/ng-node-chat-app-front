@@ -25,7 +25,7 @@ export class ApiInterceptor implements HttpInterceptor {
       const modifiedReq = request.clone({
         url: this._env.apiUrl + request.url,
         setHeaders: {
-          Authorization:
+          Authorization: 'Bearer ' + 
             this._localStorageService.getItem<TokenDto>('tokens')
               ?.accessToken || '',
         },
