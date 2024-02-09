@@ -232,7 +232,7 @@
   </main>
 </div>
 <ng-template let-observed #editProfile>
-  <form [formGroup]="editProfileForm">
+  <form [formGroup]="editProfileForm" (submit)="onEditUsername()">
     <tui-avatar
       fallback="tuiIconUserLarge"
       new
@@ -248,7 +248,7 @@
         <span class="tui-required"></span>
       </tui-input>
       <tui-error
-        formControlName="username "
+        formControlName="username"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
     </div>

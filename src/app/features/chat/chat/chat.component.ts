@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../../user/services/user.service';
 
 @Component({
   selector: 'app-chat',
@@ -28,7 +29,7 @@ export class ChatComponent implements OnInit {
     @Inject(TuiDialogService) private readonly _dialogs: TuiDialogService,
     private readonly _localStorageService: LocalStorageService,
     private readonly _fb: FormBuilder,
-    private readonly _userService:UserService
+    private readonly _userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +54,11 @@ export class ChatComponent implements OnInit {
   closeEditProfileModal = () => this.editProfileSubscription.unsubscribe();
 
   onEditUsername() {
-    // const username =
+    const username = this.editProfileForm.get('username')?.value!;
+
+    this._userService.editUsername(this.user.id, username).subscribe((data) => {
+      this._localStorageService.setProfile(data);
+      this.user = this._localStorageService.getProfile();
+    });
   }
 }
