@@ -6,18 +6,29 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LocalStorageService } from '../service/local-storage.service';
+import { EnvService } from '../service/env.service';
+import { TokenDto } from 'src/app/features/auth/model/token.dto';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(
+    private readonly _localStorageService: LocalStorageService,
+    private readonly _env: EnvService
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (request.url.includes('api')) {
+    if (request.url.includes('api') || request.url.includes('socket')) {
       const modifiedReq = request.clone({
-        url: 'http://localhost:3000' + request.url,
+        url: this._env.apiUrl + request.url,
+        setHeaders: {
+          Authorization:
+            this._localStorageService.getItem<TokenDto>('tokens')
+              ?.accessToken || '',
+        },
       });
       return next.handle(modifiedReq);
     }

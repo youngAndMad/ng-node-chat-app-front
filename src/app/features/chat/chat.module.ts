@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ChatComponent } from './chat/chat.component';
 import { TuiModule } from 'src/app/shared/tui/tui.module';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [ChatComponent],
@@ -13,6 +14,9 @@ import { TuiModule } from 'src/app/shared/tui/tui.module';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     FormsModule,
+    ToastrModule.forRoot({
+      maxOpened: 5,
+    }),
   ],
   exports: [ChatComponent],
 })

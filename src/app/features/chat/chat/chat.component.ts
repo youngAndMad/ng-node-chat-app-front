@@ -12,6 +12,7 @@ import { LocalStorageService } from 'src/app/common/service/local-storage.servic
 import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../user/services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chat',
@@ -29,7 +30,8 @@ export class ChatComponent implements OnInit {
     @Inject(TuiDialogService) private readonly _dialogs: TuiDialogService,
     private readonly _localStorageService: LocalStorageService,
     private readonly _fb: FormBuilder,
-    private readonly _userService: UserService
+    private readonly _userService: UserService,
+    private readonly _toast: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -54,11 +56,24 @@ export class ChatComponent implements OnInit {
   closeEditProfileModal = () => this.editProfileSubscription.unsubscribe();
 
   onEditUsername() {
+    if (!this.editProfileForm.valid) {
+      this._toast.error('Invalid form', 'Error', {
+        timeOut: 2000,
+      });
+      return;
+    }
+
     const username = this.editProfileForm.get('username')?.value!;
 
     this._userService.editUsername(this.user.id, username).subscribe((data) => {
       this._localStorageService.setProfile(data);
       this.user = this._localStorageService.getProfile();
+
+      this.closeEditProfileModal();
+
+      this._toast.success('Profile updated successfully', '', {
+        timeOut: 2000,
+      });
     });
   }
 }
