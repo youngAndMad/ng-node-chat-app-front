@@ -29,9 +29,6 @@ jobs:
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag daneker/ng-node-chat-app-front:latest
 
-      - name: Tag image
-        run: docker tag daneker/ng-node-chat-app-front daneker/ng-node-chat-app-front:latest
-
       - name: Log in to Docker Hub
         run: docker login --username $DOCKER_USERNAME --password  $DOCKER_PASSWORD
         env:
