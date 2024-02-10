@@ -3,7 +3,13 @@
     <div class="left">
       <div class="top">
         <input type="text" placeholder="Search" />
-        <div class="search"></div>
+        <tui-svg
+          class="ml-6 mt-1"
+          src="tuiIconUserLarge"
+          title="Edit profile"
+          (click)="showDialog(editProfile)"
+        >
+        </tui-svg>
       </div>
       <ul class="people">
         <li class="person" data-chat="person1">

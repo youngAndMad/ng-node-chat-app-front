@@ -81,6 +81,19 @@
                 background-color: var(--light);
                 transform: translate(-50%, 0);
             }
+            &.search {
+                display: block;
+                float: left;
+                width: 42px;
+                height: 42px;
+                margin-left: 10px;
+                border: 1px solid var(--light);
+                background-color: var(--blue);
+                background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/name-type.png");
+                background-repeat: no-repeat;
+                background-position: top 12px left 14px;
+                border-radius: 50%;
+            }
         }
         input {
             float: left;
@@ -95,19 +108,7 @@
                 outline: none;
             }
         }
-        a.search {
-            display: block;
-            float: left;
-            width: 42px;
-            height: 42px;
-            margin-left: 10px;
-            border: 1px solid var(--light);
-            background-color: var(--blue);
-            background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/name-type.png");
-            background-repeat: no-repeat;
-            background-position: top 12px left 14px;
-            border-radius: 50%;
-        }
+
         .people {
             margin-left: -1px;
             border-right: 1px solid var(--light);
