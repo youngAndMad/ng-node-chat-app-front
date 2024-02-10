@@ -15,6 +15,7 @@ import { UserService } from '../../user/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from '../../file/services/file.service';
 import { Router } from '@angular/router';
+import { ChatService } from '../service/chat.service';
 
 interface Friends {
   list?: HTMLElement;
@@ -49,6 +50,7 @@ export class ChatComponent implements OnInit {
     private readonly _fb: FormBuilder,
     private readonly _userService: UserService,
     private readonly _toast: ToastrService,
+    private readonly _chatService: ChatService,
     private readonly _fileService: FileService,
     private readonly _router: Router
   ) {
@@ -59,7 +61,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this._localStorageService.getProfile();
-    // this._socketIoService.connect();
+    this._socketIoService.connect();
     this.fetchUserSearch();
     this._socketIoService.isConnected$
       .pipe(
@@ -74,6 +76,7 @@ export class ChatComponent implements OnInit {
           this._socketIoService.getNewMessage().subscribe((msg) => {
             console.log(msg);
           });
+          this._socketIoService.sendMessage('daneker sila');
         }
       });
 
@@ -165,6 +168,10 @@ export class ChatComponent implements OnInit {
           query
         );
       });
+  }
+
+  createChat(id: number) {
+    this._chatService.create(this.user.id, id).subscribe(console.log);
   }
 
   chatStyles() {

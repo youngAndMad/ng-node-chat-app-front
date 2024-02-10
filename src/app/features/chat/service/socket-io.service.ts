@@ -35,7 +35,7 @@ export class SocketIoService {
   }
 
   sendMessage(message: any) {
-    this.socket.emit('message', message);
+    this.socket.emit('newMessage', message);
   }
 
   getNewMessage = () => {
