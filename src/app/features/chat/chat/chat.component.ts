@@ -3,18 +3,32 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  OnInit,
-  ViewChild,
+  OnInit
 } from '@angular/core';
 import { SocketIoService } from '../service/socket-io.service';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { Observable, Subscription, catchError } from 'rxjs';
+import { Observable, Subscription, catchError, debounceTime } from 'rxjs';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../user/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from '../../file/services/file.service';
+
+
+interface Friends {
+  list?: HTMLElement;
+  all: NodeListOf<HTMLElement>;
+  name: string;
+}
+
+interface Chat {
+  container?: HTMLElement;
+  current?: HTMLElement;
+  person?: string;
+  name?: HTMLElement;
+}
+
 
 @Component({
   selector: 'app-chat',
@@ -26,6 +40,7 @@ export class ChatComponent implements OnInit {
   editProfileSubscription: Subscription;
   user: User;
   editProfileForm: FormGroup;
+  userSearchForm: FormGroup;
 
   constructor(
     private readonly _socketIoService: SocketIoService,
@@ -35,11 +50,16 @@ export class ChatComponent implements OnInit {
     private readonly _userService: UserService,
     private readonly _toast: ToastrService,
     private readonly _fileService: FileService
-  ) {}
+  ) {
+    this.userSearchForm = this._fb.group({
+      query: [],
+    });
+  }
 
   ngOnInit(): void {
     this.user = this._localStorageService.getProfile();
-    this._socketIoService.connect();
+    // this._socketIoService.connect();
+    this.fetchUserSearch();
     this._socketIoService.isConnected
       .pipe(
         catchError((error: any) => {
@@ -55,6 +75,8 @@ export class ChatComponent implements OnInit {
           });
         }
       });
+
+      this.chatStyles()
   }
 
   showDialog(content: PolymorpheusContent<TuiDialogContext>): void {
@@ -106,4 +128,77 @@ export class ChatComponent implements OnInit {
   }
 
   imageLink = (id: number): string => this._fileService.imageLink(id);
+
+  fetchUserSearch() {
+    this.userSearchForm
+      .get('query')
+      ?.valueChanges.pipe(debounceTime(1000))
+      .subscribe((query) => {
+        this._userService
+          .fetchSuggestions(this.user.id, query)
+          .subscribe((users) => {});
+      });
+  }
+
+  
+  
+  chatStyles() {
+    document.querySelector('.chat[data-chat=person2]')?.classList.add('active-chat');
+    document.querySelector('.person[data-chat=person2]')?.classList.add('active');
+  
+    const friends: Friends = {
+      list: document.querySelector('ul.people') as HTMLElement,
+      all: document.querySelectorAll('.left .person'),
+      name: '',
+    };
+  
+    const chat: Chat = {
+      container: document.querySelector('.container .right') as HTMLElement,
+      current: undefined,
+      person: undefined,
+      name: document.querySelector('.container .right .top .name') as HTMLElement,
+    };
+  
+    friends.all.forEach((f) => {
+      f.addEventListener('mousedown', () => {
+        if (!f.classList.contains('active')) {
+          this.setActiveChat(f, friends, chat);
+        }
+      });
+    });
+  }
+  
+  setActiveChat(f: HTMLElement, friends: Friends, chat: Chat) {
+    if (friends.list) {
+      friends.list.querySelector('.active')?.classList.remove('active');
+    }
+    f.classList.add('active');
+  
+    if (chat.container) {
+      chat.current = chat.container.querySelector('.active-chat') as HTMLElement ;
+    }
+  
+    if (f.dataset?.['chat']) {
+      chat.person = f.dataset?.['chat'];
+    }
+  
+    if (chat.current) {
+      chat.current.classList.remove('active-chat');
+    }
+  
+    if (chat.container && chat.person) {
+      chat.container.querySelector(`[data-chat="${chat.person}"]`)?.classList.add('active-chat');
+    }
+  
+    if (f.querySelector('.name')) {
+      const nameElement = f.querySelector('.name') as HTMLElement;
+      friends.name = nameElement.innerText || '';
+    }
+    
+  
+    if (chat.name) {
+      chat.name.innerHTML = friends.name;
+    }
+  }
+  
 }

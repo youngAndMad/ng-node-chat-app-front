@@ -1,246 +1,152 @@
-<div id="container">
-  <aside>
-    <header>
-      <input type="text" placeholder="search" />
-    </header>
-    <ul>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status orange"></span>
-            offline
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_02.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status green"></span>
-            online
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_03.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status orange"></span>
-            offline
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_04.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status green"></span>
-            online
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_05.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status orange"></span>
-            offline
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_06.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status green"></span>
-            online
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_07.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status green"></span>
-            online
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_08.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status green"></span>
-            online
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_09.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status green"></span>
-            online
-          </h3>
-        </div>
-      </li>
-      <li>
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_10.jpg"
-          alt=""
-        />
-        <div>
-          <h2>Prénom Nom</h2>
-          <h3>
-            <span class="status orange"></span>
-            offline
-          </h3>
-        </div>
-      </li>
-    </ul>
-  </aside>
-  <main>
-    <header>
-      <div class="flex">
-        <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg"
-          alt=""
-        />
-        <h2>Vincent</h2>
-        <h3>10:12AM, Today</h3>
+<div class="wrapper">
+  <div class="container">
+    <div class="left">
+      <div class="top">
+        <input type="text" placeholder="Search" />
+        <div class="search"></div>
       </div>
-      <div
-        (click)="showDialog(editProfile)"
-        class="justify-items-end flex justify-end"
-      >
-        <img
-          src="https://avatars.mds.yandex.net/i?id=2d37b2c410aff8df7736dea1052cd36fb2a59625-7904189-images-thumbs&n=13"
-          height="40px"
-          class="block float-right"
-        />
+      <ul class="people">
+        <li class="person" data-chat="person1">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
+            alt=""
+          />
+          <span class="name">Thomas Bangalter</span>
+          <span class="time">2:09 PM</span>
+          <span class="preview">I was wondering...</span>
+        </li>
+        <li class="person" data-chat="person2">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/dog.png"
+            alt=""
+          />
+          <span class="name">Dog Woofson</span>
+          <span class="time">1:44 PM</span>
+          <span class="preview">I've forgotten how it felt before</span>
+        </li>
+        <li class="person" data-chat="person3">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/louis-ck.jpeg"
+            alt=""
+          />
+          <span class="name">Louis CK</span>
+          <span class="time">2:09 PM</span>
+          <span class="preview"
+            >But we’re probably gonna need a new carpet.</span
+          >
+        </li>
+        <li class="person" data-chat="person4">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/bo-jackson.jpg"
+            alt=""
+          />
+          <span class="name">Bo Jackson</span>
+          <span class="time">2:09 PM</span>
+          <span class="preview">It’s not that bad...</span>
+        </li>
+        <li class="person" data-chat="person5">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/michael-jordan.jpg"
+            alt=""
+          />
+          <span class="name">Michael Jordan</span>
+          <span class="time">2:09 PM</span>
+          <span class="preview"
+            >Wasup for the third time like is you blind bitch</span
+          >
+        </li>
+        <li class="person" data-chat="person6">
+          <img
+            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg"
+            alt=""
+          />
+          <span class="name">Drake</span>
+          <span class="time">2:09 PM</span>
+          <span class="preview">howdoyoudoaspace</span>
+        </li>
+      </ul>
+    </div>
+    <div class="right">
+      <div class="top">
+        <span>To: <span class="name">Dog Woofson</span></span>
       </div>
-    </header>
-    <ul id="chat">
-      <li class="you">
-        <div class="entete">
-          <span class="status green"></span>
-          <h2>Vincent</h2>
-          <h3>10:12AM, Today</h3>
+      <div class="chat" data-chat="person1">
+        <div class="conversation-start">
+          <span>Today, 6:48 AM</span>
         </div>
-        <div class="triangle"></div>
-        <div class="message">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor.
+        <div class="bubble you">Hello,</div>
+        <div class="bubble you">it's me.</div>
+        <div class="bubble you">I was wondering...</div>
+      </div>
+      <div class="chat" data-chat="person2">
+        <div class="conversation-start">
+          <span>Today, 5:38 PM</span>
         </div>
-      </li>
-      <li class="me">
-        <div class="entete">
-          <h3>10:12AM, Today</h3>
-          <h2>Vincent</h2>
-          <span class="status blue"></span>
+        <div class="bubble you">Hello, can you hear me?</div>
+        <div class="bubble you">I'm in California dreaming</div>
+        <div class="bubble me">... about who we used to be.</div>
+        <div class="bubble me">Are you serious?</div>
+        <div class="bubble you">When we were younger and free...</div>
+        <div class="bubble you">I've forgotten how it felt before</div>
+      </div>
+      <div class="chat" data-chat="person3">
+        <div class="conversation-start">
+          <span>Today, 3:38 AM</span>
         </div>
-        <div class="triangle"></div>
-        <div class="message">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor.
-        </div>
-      </li>
-      <li class="me">
-        <div class="entete">
-          <h3>10:12AM, Today</h3>
-          <h2>Vincent</h2>
-          <span class="status blue"></span>
-        </div>
-        <div class="triangle"></div>
-        <div class="message">OK</div>
-      </li>
-      <li class="you">
-        <div class="entete">
-          <span class="status green"></span>
-          <h2>Vincent</h2>
-          <h3>10:12AM, Today</h3>
-        </div>
-        <div class="triangle"></div>
-        <div class="message">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor.
-        </div>
-      </li>
-      <li class="me">
-        <div class="entete">
-          <h3>10:12AM, Today</h3>
-          <h2>Vincent</h2>
-          <span class="status blue"></span>
-        </div>
-        <div class="triangle"></div>
-        <div class="message">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-          commodo ligula eget dolor.
-        </div>
-      </li>
-      <li class="me">
-        <div class="entete">
-          <h3>10:12AM, Today</h3>
-          <h2>Vincent</h2>
-          <span class="status blue"></span>
-        </div>
-        <div class="triangle"></div>
-        <div class="message">OK</div>
-      </li>
-    </ul>
-    <footer>
-      <div class="footer-wrapper">
-        <div class="message_input" style="width: 90%">
-          <textarea
-            placeholder="Type your message"
-            style="width: 100%"
-          ></textarea>
-          <a href="#">Send</a>
+        <div class="bubble you">Hey human!</div>
+        <div class="bubble you">Umm... Someone took a shit in the hallway.</div>
+        <div class="bubble me">... what.</div>
+        <div class="bubble me">Are you serious?</div>
+        <div class="bubble you">I mean...</div>
+        <div class="bubble you">It’s not that bad...</div>
+        <div class="bubble you">
+          But we’re probably gonna need a new carpet.
         </div>
       </div>
-    </footer>
-  </main>
+      <div class="chat" data-chat="person4">
+        <div class="conversation-start">
+          <span>Yesterday, 4:20 PM</span>
+        </div>
+        <div class="bubble me">Hey human!</div>
+        <div class="bubble me">Umm... Someone took a shit in the hallway.</div>
+        <div class="bubble you">... what.</div>
+        <div class="bubble you">Are you serious?</div>
+        <div class="bubble me">I mean...</div>
+        <div class="bubble me">It’s not that bad...</div>
+      </div>
+      <div class="chat" data-chat="person5">
+        <div class="conversation-start">
+          <span>Today, 6:28 AM</span>
+        </div>
+        <div class="bubble you">Wasup</div>
+        <div class="bubble you">Wasup</div>
+        <div class="bubble you">
+          Wasup for the third time like is <br />you blind bitch
+        </div>
+      </div>
+      <div class="chat" data-chat="person6">
+        <div class="conversation-start">
+          <span>Monday, 1:27 PM</span>
+        </div>
+        <div class="bubble you">So, how's your new phone?</div>
+        <div class="bubble you">You finally have a smartphone :D</div>
+        <div class="bubble me">Drake?</div>
+        <div class="bubble me">Why aren't you answering?</div>
+        <div class="bubble you">howdoyoudoaspace</div>
+      </div>
+      <div class="write">
+        <a href="javascript:;" class="write-link attach"></a>
+        <input type="text" />
+        <a href="javascript:;" class="write-link smiley"></a>
+        <a href="javascript:;" class="write-link send"></a>
+      </div>
+    </div>
+  </div>
 </div>
+
 <ng-template let-observed #editProfile>
   <form [formGroup]="editProfileForm" (submit)="onEditUsername()">
-    <div class="flex justify-center items-center">
+    <div class="flex flex-col justify-center">
       <tui-avatar
         fallback="tuiIconUserLarge"
         new
@@ -248,18 +154,24 @@
         [avatarUrl]="imageLink(user.id)"
         [size]="'xl'"
         (click)="fileInput.click()"
+        title="Upload new profile image"
       >
         <input
           hidden
           #fileInput
-          class="w-100 h-100"
           type="file"
+          class="w-full h-full"
+          accept="image/*"
           (change)="onFileSelected($event)"
         />
       </tui-avatar>
 
       <div class="tui-form__row">
-        <tui-input formControlName="username" tuiHintContent="Username">
+        <tui-input
+          formControlName="username"
+          tuiHintContent="Username"
+          class="w-52"
+        >
           Username
           <input tuiTextfield [required]="true" />
           <span class="tui-required"></span>
@@ -285,3 +197,40 @@
     </div>
   </form>
 </ng-template>
+<script>
+  document
+    .querySelector(".chat[data-chat=person2]")
+    .classList.add("active-chat");
+  document.querySelector(".person[data-chat=person2]").classList.add("active");
+
+  let friends = {
+      list: document.querySelector("ul.people"),
+      all: document.querySelectorAll(".left .person"),
+      name: "",
+    },
+    chat = {
+      container: document.querySelector(".container .right"),
+      current: null,
+      person: null,
+      name: document.querySelector(".container .right .top .name"),
+    };
+
+  friends.all.forEach((f) => {
+    f.addEventListener("mousedown", () => {
+      f.classList.contains("active") || setAciveChat(f);
+    });
+  });
+
+  function setAciveChat(f) {
+    friends.list.querySelector(".active").classList.remove("active");
+    f.classList.add("active");
+    chat.current = chat.container.querySelector(".active-chat");
+    chat.person = f.getAttribute("data-chat");
+    chat.current.classList.remove("active-chat");
+    chat.container
+      .querySelector('[data-chat="' + chat.person + '"]')
+      .classList.add("active-chat");
+    friends.name = f.querySelector(".name").innerText;
+    chat.name.innerHTML = friends.name;
+  }
+</script>

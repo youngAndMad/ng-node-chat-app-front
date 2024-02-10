@@ -31,7 +31,6 @@ export class SocketIoService {
   }
 
   sendMessage(message: any) {
-    console.log('sendMessage: ', message);
     this.socket.emit('message', message);
   }
 
