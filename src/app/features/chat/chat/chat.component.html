@@ -4,10 +4,17 @@
       <div class="top">
         <input type="text" placeholder="Search" />
         <tui-svg
-          class="ml-6 mt-1"
+          class="ml-6 mt-2"
           src="tuiIconUserLarge"
           title="Edit profile"
-          (click)="showDialog(editProfile)"
+          (click)="showDialog(editProfile, 'Edit profile')"
+        >
+        </tui-svg>
+        <tui-svg
+          src="tuiIconSearchLarge"
+          class="ml-6 mt-2"
+          title="Find users"
+          (click)="showDialog(userListModal, 'Find users')"
         >
         </tui-svg>
       </div>
@@ -29,46 +36,6 @@
           <span class="name">Dog Woofson</span>
           <span class="time">1:44 PM</span>
           <span class="preview">I've forgotten how it felt before</span>
-        </li>
-        <li class="person" data-chat="person3">
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/louis-ck.jpeg"
-            alt=""
-          />
-          <span class="name">Louis CK</span>
-          <span class="time">2:09 PM</span>
-          <span class="preview"
-            >But we’re probably gonna need a new carpet.</span
-          >
-        </li>
-        <li class="person" data-chat="person4">
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/bo-jackson.jpg"
-            alt=""
-          />
-          <span class="name">Bo Jackson</span>
-          <span class="time">2:09 PM</span>
-          <span class="preview">It’s not that bad...</span>
-        </li>
-        <li class="person" data-chat="person5">
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/michael-jordan.jpg"
-            alt=""
-          />
-          <span class="name">Michael Jordan</span>
-          <span class="time">2:09 PM</span>
-          <span class="preview"
-            >Wasup for the third time like is you blind bitch</span
-          >
-        </li>
-        <li class="person" data-chat="person6">
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg"
-            alt=""
-          />
-          <span class="name">Drake</span>
-          <span class="time">2:09 PM</span>
-          <span class="preview">howdoyoudoaspace</span>
         </li>
       </ul>
     </div>
@@ -95,51 +62,6 @@
         <div class="bubble you">When we were younger and free...</div>
         <div class="bubble you">I've forgotten how it felt before</div>
       </div>
-      <div class="chat" data-chat="person3">
-        <div class="conversation-start">
-          <span>Today, 3:38 AM</span>
-        </div>
-        <div class="bubble you">Hey human!</div>
-        <div class="bubble you">Umm... Someone took a shit in the hallway.</div>
-        <div class="bubble me">... what.</div>
-        <div class="bubble me">Are you serious?</div>
-        <div class="bubble you">I mean...</div>
-        <div class="bubble you">It’s not that bad...</div>
-        <div class="bubble you">
-          But we’re probably gonna need a new carpet.
-        </div>
-      </div>
-      <div class="chat" data-chat="person4">
-        <div class="conversation-start">
-          <span>Yesterday, 4:20 PM</span>
-        </div>
-        <div class="bubble me">Hey human!</div>
-        <div class="bubble me">Umm... Someone took a shit in the hallway.</div>
-        <div class="bubble you">... what.</div>
-        <div class="bubble you">Are you serious?</div>
-        <div class="bubble me">I mean...</div>
-        <div class="bubble me">It’s not that bad...</div>
-      </div>
-      <div class="chat" data-chat="person5">
-        <div class="conversation-start">
-          <span>Today, 6:28 AM</span>
-        </div>
-        <div class="bubble you">Wasup</div>
-        <div class="bubble you">Wasup</div>
-        <div class="bubble you">
-          Wasup for the third time like is <br />you blind bitch
-        </div>
-      </div>
-      <div class="chat" data-chat="person6">
-        <div class="conversation-start">
-          <span>Monday, 1:27 PM</span>
-        </div>
-        <div class="bubble you">So, how's your new phone?</div>
-        <div class="bubble you">You finally have a smartphone :D</div>
-        <div class="bubble me">Drake?</div>
-        <div class="bubble me">Why aren't you answering?</div>
-        <div class="bubble you">howdoyoudoaspace</div>
-      </div>
       <div class="write">
         <a href="javascript:;" class="write-link attach"></a>
         <input type="text" />
@@ -154,6 +76,7 @@
   <form [formGroup]="editProfileForm" (submit)="onEditUsername()">
     <div class="flex flex-col justify-center">
       <tui-avatar
+        id="avatar"
         fallback="tuiIconUserLarge"
         new
         class="tui-space_left-3 avatar inline-block"
@@ -201,5 +124,38 @@
         </button>
       </div>
     </div>
+  </form>
+</ng-template>
+
+<ng-template let-observed #userListModal>
+  <form [formGroup]="userSearchForm">
+    <div class="tui-form__row">
+      <tui-input formControlName="query" tuiHintContent="Username" class="w-52">
+        Type
+        <input tuiTextfield [required]="true" />
+        <span class="tui-required"></span>
+      </tui-input>
+    </div>
+    <ng-container *ngFor="let fetchUser of fetchedUsers | async" class="pt-8">
+      <div class="border border-gray-600 shadow-md p-4 flex relative">
+        <tui-avatar
+          fallback="tuiIconUserLarge"
+          new
+          class="tui-space_left-3 avatar inline-block"
+          [avatarUrl]="imageLink(fetchUser.id)"
+          [size]="'m'"
+        >
+        </tui-avatar>
+        <div class="text-black pt-1 pl-4">
+          {{ fetchUser.username }}
+        </div>
+        <tui-svg
+          src="tuiIconMessageCircleLarge"
+          class="ml-52 float-right block pt-2"
+          title="Start chat"
+        >
+        </tui-svg>
+      </div>
+    </ng-container>
   </form>
 </ng-template>

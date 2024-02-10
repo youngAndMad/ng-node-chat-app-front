@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { SocketIoService } from '../service/socket-io.service';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
@@ -14,7 +14,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../user/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { FileService } from '../../file/services/file.service';
-
+import { Router } from '@angular/router';
 
 interface Friends {
   list?: HTMLElement;
@@ -29,7 +29,6 @@ interface Chat {
   name?: HTMLElement;
 }
 
-
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -41,6 +40,7 @@ export class ChatComponent implements OnInit {
   user: User;
   editProfileForm: FormGroup;
   userSearchForm: FormGroup;
+  fetchedUsers: Observable<User[]>;
 
   constructor(
     private readonly _socketIoService: SocketIoService,
@@ -49,7 +49,8 @@ export class ChatComponent implements OnInit {
     private readonly _fb: FormBuilder,
     private readonly _userService: UserService,
     private readonly _toast: ToastrService,
-    private readonly _fileService: FileService
+    private readonly _fileService: FileService,
+    private readonly _router: Router
   ) {
     this.userSearchForm = this._fb.group({
       query: [],
@@ -60,7 +61,7 @@ export class ChatComponent implements OnInit {
     this.user = this._localStorageService.getProfile();
     // this._socketIoService.connect();
     this.fetchUserSearch();
-    this._socketIoService.isConnected
+    this._socketIoService.isConnected$
       .pipe(
         catchError((error: any) => {
           console.error('Error connecting to socket:', error);
@@ -76,19 +77,37 @@ export class ChatComponent implements OnInit {
         }
       });
 
-      this.chatStyles()
-  }
-
-  showDialog(content: PolymorpheusContent<TuiDialogContext>): void {
-    this.editProfileForm = this._fb.group({
-      username: [
-        this.user.username,
-        [Validators.required, Validators.minLength(4)],
-      ],
+    this._socketIoService.errorMessage$.subscribe((error: any) => {
+      console.error(error);
+      this._toast.error(JSON.stringify(error), 'Socket io error', {
+        timeOut: 3000,
+        closeButton: false,
+      });
+      if (error.name && error.name === 'TokenExpiredError') {
+        setTimeout(() => {
+          this._router.navigate(['/user-login']);
+        }, 3000);
+      }
     });
 
+    this.chatStyles();
+  }
+
+  showDialog(
+    content: PolymorpheusContent<TuiDialogContext>,
+    label: string
+  ): void {
+    if (label === 'Edit profile') {
+      this.editProfileForm = this._fb.group({
+        username: [
+          this.user.username,
+          [Validators.required, Validators.minLength(4)],
+        ],
+      });
+    }
+
     this.editProfileSubscription = this._dialogs
-      .open(content, { size: 's', label: 'Edit profile' })
+      .open(content, { size: 's', label: label })
       .subscribe();
   }
 
@@ -119,11 +138,18 @@ export class ChatComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this._fileService
-        .uploadUserAvatar(this.user.id, file)
-        .subscribe((response) => {
-          console.log('Avatar uploaded successfully:', response);
+      this._fileService.uploadUserAvatar(this.user.id, file).subscribe(() => {
+        this._toast.success('Profile updated successfully', '', {
+          timeOut: 2000,
         });
+
+        document
+          .getElementById('avatar')
+          ?.setAttribute(
+            'avatar-url',
+            this.imageLink(this.user.id) + '?timestamp=' + new Date().getTime()
+          ); // todo
+      });
     }
   }
 
@@ -134,31 +160,36 @@ export class ChatComponent implements OnInit {
       .get('query')
       ?.valueChanges.pipe(debounceTime(1000))
       .subscribe((query) => {
-        this._userService
-          .fetchSuggestions(this.user.id, query)
-          .subscribe((users) => {});
+        this.fetchedUsers = this._userService.fetchSuggestions(
+          this.user.id,
+          query
+        );
       });
   }
 
-  
-  
   chatStyles() {
-    document.querySelector('.chat[data-chat=person2]')?.classList.add('active-chat');
-    document.querySelector('.person[data-chat=person2]')?.classList.add('active');
-  
+    document
+      .querySelector('.chat[data-chat=person2]')
+      ?.classList.add('active-chat');
+    document
+      .querySelector('.person[data-chat=person2]')
+      ?.classList.add('active');
+
     const friends: Friends = {
       list: document.querySelector('ul.people') as HTMLElement,
       all: document.querySelectorAll('.left .person'),
       name: '',
     };
-  
+
     const chat: Chat = {
       container: document.querySelector('.container .right') as HTMLElement,
       current: undefined,
       person: undefined,
-      name: document.querySelector('.container .right .top .name') as HTMLElement,
+      name: document.querySelector(
+        '.container .right .top .name'
+      ) as HTMLElement,
     };
-  
+
     friends.all.forEach((f) => {
       f.addEventListener('mousedown', () => {
         if (!f.classList.contains('active')) {
@@ -167,38 +198,40 @@ export class ChatComponent implements OnInit {
       });
     });
   }
-  
+
   setActiveChat(f: HTMLElement, friends: Friends, chat: Chat) {
     if (friends.list) {
       friends.list.querySelector('.active')?.classList.remove('active');
     }
     f.classList.add('active');
-  
+
     if (chat.container) {
-      chat.current = chat.container.querySelector('.active-chat') as HTMLElement ;
+      chat.current = chat.container.querySelector(
+        '.active-chat'
+      ) as HTMLElement;
     }
-  
+
     if (f.dataset?.['chat']) {
       chat.person = f.dataset?.['chat'];
     }
-  
+
     if (chat.current) {
       chat.current.classList.remove('active-chat');
     }
-  
+
     if (chat.container && chat.person) {
-      chat.container.querySelector(`[data-chat="${chat.person}"]`)?.classList.add('active-chat');
+      chat.container
+        .querySelector(`[data-chat="${chat.person}"]`)
+        ?.classList.add('active-chat');
     }
-  
+
     if (f.querySelector('.name')) {
       const nameElement = f.querySelector('.name') as HTMLElement;
       friends.name = nameElement.innerText || '';
     }
-    
-  
+
     if (chat.name) {
       chat.name.innerHTML = friends.name;
     }
   }
-  
 }

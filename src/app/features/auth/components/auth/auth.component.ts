@@ -39,8 +39,8 @@ export class AuthComponent implements OnInit {
     });
 
     this.registrationForm = this._fb.group({
-      email: ['kkraken22@gmail.com', [Validators.required, Validators.email]],
-      password: ['nulllllll', [Validators.required, Validators.minLength(8)]],
+      email: ['kkraken2005@gmail.com', [Validators.required, Validators.email]],
+      password: ['password', [Validators.required, Validators.minLength(8)]],
       username: [
         'danekerscode',
         [Validators.required, Validators.minLength(3)],
@@ -74,11 +74,10 @@ export class AuthComponent implements OnInit {
 
   onLoginFormSubmit() {
     this._authService.login(this.loginForm.value).subscribe((response) => {
-      this._localStorageService.setItem('tokens', response);
+      this._localStorageService.setItem('tokens', response.tokens);
+      this._localStorageService.setProfile(response.user);
 
-      this._router.navigate(['/home']).then(() => {
-        console.log('redirect to home page');
-      });
+      this._router.navigate(['/home']);
     });
   }
 

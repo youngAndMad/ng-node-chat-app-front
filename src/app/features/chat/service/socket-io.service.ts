@@ -11,7 +11,8 @@ import { TokenDto } from '../../auth/model/token.dto';
 export class SocketIoService {
   private socket: Socket;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
-  public isConnected: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public isConnected$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public errorMessage$: BehaviorSubject<string> = new BehaviorSubject('');
 
   constructor(
     private readonly _envService: EnvService,
@@ -27,7 +28,10 @@ export class SocketIoService {
       },
     });
 
-    this.isConnected.next(true);
+    this.socket.on('error', (error) => {
+      this.errorMessage$.next(error);
+    });
+    this.isConnected$.next(true);
   }
 
   sendMessage(message: any) {
