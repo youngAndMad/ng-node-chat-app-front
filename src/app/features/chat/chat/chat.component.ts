@@ -102,6 +102,8 @@ export class ChatComponent implements OnInit {
       });
 
     this.chatStyles();
+
+    this._chatService.getChats().subscribe(console.log);
   }
 
   showDialog(
