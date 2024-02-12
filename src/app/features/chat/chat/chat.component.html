@@ -17,6 +17,13 @@
           (click)="showDialog(userListModal, 'Find users')"
         >
         </tui-svg>
+        <tui-svg
+          src="tuiIconLogOutLarge"
+          class="ml-6 mt-2"
+          title="Logout"
+          (click)="showDialog(logoutModal, 'Are you sure to logout')"
+        >
+        </tui-svg>
       </div>
       <ul class="people">
         <li class="person" data-chat="person1">
@@ -113,7 +120,7 @@
 
       <div class="tui-form__buttons">
         <button
-          size="s"
+          size="m"
           tuiButton
           type="submit"
           class="tui-form__button"
@@ -125,6 +132,20 @@
       </div>
     </div>
   </form>
+</ng-template>
+
+<ng-template #logoutModal let-obserbed>
+  <div>
+    <button
+      size="m"
+      tuiButton
+      type="submit"
+      class="float-right"
+      (click)="logout()"
+    >
+      YES
+    </button>
+  </div>
 </ng-template>
 
 <ng-template let-observed #userListModal>

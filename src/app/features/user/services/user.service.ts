@@ -22,4 +22,7 @@ export class UserService {
         query: query,
       },
     });
+
+  getAllUsers = (): Observable<User[]> =>
+    this._http.get<User[]>('/api/v1/user/admin/all');
 }

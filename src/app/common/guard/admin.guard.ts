@@ -5,7 +5,6 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Observable } from 'rxjs';
 import { LocalStorageService } from '../service/local-storage.service';
 
 export const AdminGuard: CanActivateFn = (
@@ -19,6 +18,7 @@ export const AdminGuard: CanActivateFn = (
 
   if (!(profile && profile.emailVerified && profile.role === 'ADMIN')) {
     console.log('access rejected');
+    router.navigate([`/not-found`]);
     return false;
   }
 

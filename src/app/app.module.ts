@@ -12,9 +12,11 @@ import { TuiModule } from './shared/tui/tui.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './shared/components/home/home.component';
 import { ChatModule } from './features/chat/chat.module';
+import { UserModule } from './features/user/user.module';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, HomeComponent, NotFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -24,6 +26,7 @@ import { ChatModule } from './features/chat/chat.module';
     BrowserAnimationsModule,
     FileModule,
     ChatModule,
+    UserModule
   ],
   providers: [
     { useClass: ApiInterceptor, multi: true, provide: HTTP_INTERCEPTORS },

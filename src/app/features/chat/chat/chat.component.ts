@@ -7,7 +7,13 @@ import {
 } from '@angular/core';
 import { SocketIoService } from '../service/socket-io.service';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
-import { Observable, Subscription, catchError, debounceTime } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  catchError,
+  debounceTime,
+  filter,
+} from 'rxjs';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -37,7 +43,7 @@ interface Chat {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatComponent implements OnInit {
-  editProfileSubscription: Subscription;
+  modalSubscription: Subscription;
   user: User;
   editProfileForm: FormGroup;
   userSearchForm: FormGroup;
@@ -80,18 +86,20 @@ export class ChatComponent implements OnInit {
         }
       });
 
-    this._socketIoService.errorMessage$.subscribe((error: any) => {
-      console.error(error);
-      this._toast.error(JSON.stringify(error), 'Socket io error', {
-        timeOut: 3000,
-        closeButton: false,
+    this._socketIoService.errorMessage$
+      .pipe(filter((error) => error !== ''))
+      .subscribe((error: any) => {
+        console.error(error);
+        this._toast.error(JSON.stringify(error), 'Socket io error', {
+          timeOut: 3000,
+          closeButton: false,
+        });
+        if (error.name && error.name === 'TokenExpiredError') {
+          setTimeout(() => {
+            this._router.navigate(['/user-login']);
+          }, 3000);
+        }
       });
-      if (error.name && error.name === 'TokenExpiredError') {
-        setTimeout(() => {
-          this._router.navigate(['/user-login']);
-        }, 3000);
-      }
-    });
 
     this.chatStyles();
   }
@@ -109,12 +117,12 @@ export class ChatComponent implements OnInit {
       });
     }
 
-    this.editProfileSubscription = this._dialogs
+    this.modalSubscription = this._dialogs
       .open(content, { size: 's', label: label })
       .subscribe();
   }
 
-  closeEditProfileModal = () => this.editProfileSubscription.unsubscribe();
+  closeEditProfileModal = () => this.modalSubscription.unsubscribe();
 
   onEditUsername() {
     if (!this.editProfileForm.valid) {
@@ -240,5 +248,11 @@ export class ChatComponent implements OnInit {
     if (chat.name) {
       chat.name.innerHTML = friends.name;
     }
+  }
+
+  logout() {
+    this._localStorageService.clear();
+    this.modalSubscription.unsubscribe();
+    this._router.navigate(['/user-login']);
   }
 }
