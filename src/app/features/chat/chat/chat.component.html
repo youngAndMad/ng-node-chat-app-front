@@ -4,24 +4,32 @@
       <div class="top">
         <input type="text" placeholder="Search" />
         <tui-svg
-          class="ml-6 mt-2"
-          src="tuiIconUserLarge"
+          class="ml-4 mt-2"
+          src="tuiIconUser"
           title="Edit profile"
           (click)="showDialog(editProfile, 'Edit profile')"
         >
         </tui-svg>
         <tui-svg
-          src="tuiIconSearchLarge"
-          class="ml-6 mt-2"
+          src="tuiIconSearch"
+          class="ml-4 mt-2"
           title="Find users"
           (click)="showDialog(userListModal, 'Find users')"
         >
         </tui-svg>
         <tui-svg
-          src="tuiIconLogOutLarge"
-          class="ml-6 mt-2"
+          src="tuiIconLogOut"
+          class="ml-4 mt-2"
           title="Logout"
           (click)="showDialog(logoutModal, 'Are you sure to logout')"
+        >
+        </tui-svg>
+        <tui-svg
+          *ngIf="user.role === 'ADMIN'"
+          src="tuiIconUsers"
+          class="ml-4 mt-2"
+          title="All users"
+          (click)="navigateToUsersPage()"
         >
         </tui-svg>
       </div>

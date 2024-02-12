@@ -178,6 +178,10 @@ export class ChatComponent implements OnInit {
       });
   }
 
+  navigateToUsersPage() {
+    this._router.navigate(['/users']);
+  }
+
   createChat(id: number) {
     this._chatService.create(this.user.id, id).subscribe(console.log);
   }

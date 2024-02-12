@@ -24,13 +24,12 @@ export class LocalStorageService {
   }
 
   getProfile(): User {
-    console.log('extract profile')
+    console.log('extract profile');
     return JSON.parse(localStorage.getItem('user')!);
   }
 
   setProfile(user: User): void {
-    console.log('update profile')
-
+    console.log('update profile');
     localStorage.setItem('user', JSON.stringify(user));
   }
 }

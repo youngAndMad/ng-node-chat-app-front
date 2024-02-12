@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
@@ -54,6 +54,7 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupOtpChangeHandler();
+    this._localStorageService.clear();
   }
 
   onSignupClick() {
@@ -100,6 +101,7 @@ export class AuthComponent implements OnInit {
     this.otpForm
       .get('otp')
       ?.valueChanges.pipe(debounceTime(1000))
+      .pipe(filter((val) => val !== ''))
       .subscribe((otpValue: string) => {
         console.log('new otp input ', otpValue);
         if (otpValue.length === 6) {
