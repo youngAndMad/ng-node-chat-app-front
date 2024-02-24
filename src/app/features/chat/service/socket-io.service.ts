@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import { EnvService } from 'src/app/common/service/env.service';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { TokenDto } from '../../auth/model/token.dto';
+import { User } from 'src/app/common/model/user';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +43,16 @@ export class SocketIoService {
   }
 
   getNewMessage = () => {
-    this.socket.on('greeting', (message) => {
+    const user = this._localStorageService.getProfile();
+
+    if (!user) {
+      console.warn(
+        'user from local storage service is null, could not connect to new message event'
+      );
+      return;
+    }
+
+    this.socket.on(`newMessage`, (message) => {
       this.message$.next(message);
     });
 

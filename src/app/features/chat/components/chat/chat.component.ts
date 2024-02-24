@@ -1,11 +1,12 @@
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
   OnInit,
 } from '@angular/core';
-import { SocketIoService } from '../service/socket-io.service';
+import { SocketIoService } from '../../service/socket-io.service';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import {
   Observable,
@@ -13,29 +14,20 @@ import {
   catchError,
   debounceTime,
   filter,
+  throwError,
 } from 'rxjs';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { User } from 'src/app/common/model/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../../user/services/user.service';
+import { UserService } from 'src/app/features/user/services/user.service';
 import { ToastrService } from 'ngx-toastr';
-import { FileService } from '../../file/services/file.service';
+import { FileService } from 'src/app/features/file/services/file.service';
 import { Router } from '@angular/router';
-import { ChatService } from '../service/chat.service';
-import { Chat } from '../model/chat';
-
-interface Friends {
-  list?: HTMLElement;
-  all: NodeListOf<HTMLElement>;
-  name: string;
-}
-
-interface IChat {
-  container?: HTMLElement;
-  current?: HTMLElement;
-  person?: string;
-  name?: HTMLElement;
-}
+import { ChatService } from '../../service/chat.service';
+import { Chat } from '../../model/chat';
+import { Message } from '../../model/message';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
+import { TokenDto } from 'src/app/features/auth/model/token.dto';
 
 @Component({
   selector: 'app-chat',
@@ -51,6 +43,10 @@ export class ChatComponent implements OnInit {
   fetchedUsers: Observable<User[]>;
   chats: Chat[];
 
+  currentChat: Chat;
+
+  isContentLoaded: boolean = false;
+
   constructor(
     private readonly _socketIoService: SocketIoService,
     @Inject(TuiDialogService) private readonly _dialogs: TuiDialogService,
@@ -60,7 +56,9 @@ export class ChatComponent implements OnInit {
     private readonly _toast: ToastrService,
     private readonly _chatService: ChatService,
     private readonly _fileService: FileService,
-    private readonly _router: Router
+    private readonly _authService: AuthService,
+    private readonly _router: Router,
+    private readonly _cdr: ChangeDetectorRef
   ) {
     this.userSearchForm = this._fb.group({
       query: [],
@@ -78,12 +76,21 @@ export class ChatComponent implements OnInit {
           return new Observable<never>();
         })
       )
+
       .subscribe((isConnected) => {
         if (isConnected === true) {
           console.log('isConnected', isConnected);
-          this._socketIoService.getNewMessage().subscribe((msg) => {
-            console.log(msg);
-          });
+          this._socketIoService
+            .getNewMessage()
+            ?.pipe(
+              filter((value: any) => {
+                console.log('value filter ', value);
+                return value !== '' && value.userId !== this.user.id;
+              })
+            )
+            .subscribe((msg) => {
+              console.log('new message from socket io', msg);
+            });
           this._socketIoService.sendMessage('daneker sila');
         }
       });
@@ -97,22 +104,70 @@ export class ChatComponent implements OnInit {
           closeButton: false,
         });
         if (error.name && error.name === 'TokenExpiredError') {
-          setTimeout(() => {
-            this._router.navigate(['/user-login']);
-          }, 3000);
+          this._toast.info('Refresh token attempt', 'Debug', {
+            timeOut: 3000,
+            closeButton: false,
+          });
+          this._authService
+            .refreshToken(
+              this._localStorageService.getItem<TokenDto>('tokens')
+                ?.refreshToken!
+            )
+            .pipe(
+              catchError((err) => {
+                this._toast.error(JSON.stringify(err), 'Socket io error', {
+                  timeOut: 3000,
+                  closeButton: false,
+                });
+                setTimeout(() => {
+                  this._router.navigate(['/user-login']);
+                }, 3000);
+                return throwError(
+                  () =>
+                    new Error(
+                      'An error occurred during refresh token ' + err.name
+                    )
+                );
+              })
+            )
+            .subscribe((tokens) => {
+              this._localStorageService.setItem('tokens', tokens);
+              this._toast.success('Refresh updated successfully', 'Success', {
+                timeOut: 3000,
+                closeButton: false,
+              });
+            });
         }
       });
 
-    this.chatStyles();
-
     this._chatService.getChats().subscribe((res) => {
       this.chats = res;
-      console.log(this.chats);
+      this.currentChat = res[0];
+      this.isContentLoaded = true;
+      this._cdr.detectChanges();
     });
   }
 
   getSecondMember(chat: Chat): User {
     return chat.members.filter((member) => member.email !== this.user.email)[0];
+  }
+
+  getLastMessage(chat: Chat): Message {
+    return chat.messages.slice(-1)[0];
+  }
+
+  onSelectChat(chat: Chat) {
+    this.currentChat = chat;
+  }
+
+  sendMessage(message: string) {
+    if (!message || message === '') {
+      this._toast.error('Can not send empty message', 'Error');
+      return;
+    }
+    this._chatService
+      .sendMessage(this.user.id, this.currentChat.id, message)
+      .subscribe();
   }
 
   showDialog(
@@ -195,74 +250,6 @@ export class ChatComponent implements OnInit {
 
   createChat(id: number) {
     this._chatService.create(this.user.id, id).subscribe(console.log);
-  }
-
-  chatStyles() {
-    document
-      .querySelector('.chat[data-chat=person2]')
-      ?.classList.add('active-chat');
-    document
-      .querySelector('.person[data-chat=person2]')
-      ?.classList.add('active');
-
-    const friends: Friends = {
-      list: document.querySelector('ul.people') as HTMLElement,
-      all: document.querySelectorAll('.left .person'),
-      name: '',
-    };
-
-    const chat: IChat = {
-      container: document.querySelector('.container .right') as HTMLElement,
-      current: undefined,
-      person: undefined,
-      name: document.querySelector(
-        '.container .right .top .name'
-      ) as HTMLElement,
-    };
-
-    friends.all.forEach((f) => {
-      f.addEventListener('mousedown', () => {
-        if (!f.classList.contains('active')) {
-          this.setActiveChat(f, friends, chat);
-        }
-      });
-    });
-  }
-
-  setActiveChat(f: HTMLElement, friends: Friends, chat: IChat) {
-    if (friends.list) {
-      friends.list.querySelector('.active')?.classList.remove('active');
-    }
-    f.classList.add('active');
-
-    if (chat.container) {
-      chat.current = chat.container.querySelector(
-        '.active-chat'
-      ) as HTMLElement;
-    }
-
-    if (f.dataset?.['chat']) {
-      chat.person = f.dataset?.['chat'];
-    }
-
-    if (chat.current) {
-      chat.current.classList.remove('active-chat');
-    }
-
-    if (chat.container && chat.person) {
-      chat.container
-        .querySelector(`[data-chat="${chat.person}"]`)
-        ?.classList.add('active-chat');
-    }
-
-    if (f.querySelector('.name')) {
-      const nameElement = f.querySelector('.name') as HTMLElement;
-      friends.name = nameElement.innerText || '';
-    }
-
-    if (chat.name) {
-      chat.name.innerHTML = friends.name;
-    }
   }
 
   logout() {

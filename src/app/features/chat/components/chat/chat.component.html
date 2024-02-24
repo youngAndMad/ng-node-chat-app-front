@@ -45,29 +45,16 @@
           <span class="time">2:09 PM</span>
           <span class="preview">I was wondering...</span>
         </li>
-        <!-- <li class="person" data-chat="person1">
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
-            alt=""
-          />
-          <span class="name">Thomas Bangalter</span>
-          <span class="time">2:09 PM</span>
-          <span class="preview">I was wondering...</span>
-        </li> -->
-        <li class="person" data-chat="person2">
-          <img
-            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/dog.png"
-            alt=""
-          />
-          <span class="name">Dog Woofson</span>
-          <span class="time">1:44 PM</span>
-          <span class="preview">I've forgotten how it felt before</span>
-        </li>
       </ul>
     </div>
-    <div class="right">
+    <div class="right" *ngIf="isContentLoaded">
       <div class="top">
-        <span>To: <span class="name">Dog Woofson</span></span>
+        <span
+          >To:
+          <span class="name">{{
+            getSecondMember(currentChat).username
+          }}</span></span
+        >
       </div>
 
       <div
@@ -82,16 +69,6 @@
         <div class="bubble you">it's me.</div>
         <div class="bubble you">I was wondering...</div>
       </div>
-
-      <!-- <div class="chat" data-chat="person1">
-        <div class="conversation-start">
-          <span>Today, 6:48 AM</span>
-        </div>
-        <div class="bubble you">Hello,</div>
-        <div class="bubble you">it's me.</div>
-        <div class="bubble you">I was wondering...</div>
-      </div> -->
-
       <div class="chat" data-chat="person2">
         <div class="conversation-start">
           <span>Today, 5:38 PM</span>
@@ -104,10 +81,12 @@
         <div class="bubble you">I've forgotten how it felt before</div>
       </div>
       <div class="write">
-        <a href="javascript:;" class="write-link attach"></a>
-        <input type="text" />
-        <a href="javascript:;" class="write-link smiley"></a>
-        <a href="javascript:;" class="write-link send"></a>
+        <input type="text" #messageInput />
+        <a
+          href="javascript:;"
+          class="write-link send"
+          (click)="sendMessage(messageInput.value!)"
+        ></a>
       </div>
     </div>
   </div>
@@ -168,7 +147,7 @@
   </form>
 </ng-template>
 
-<ng-template #logoutModal let-obserbed>
+<ng-template #logoutModal let-observed>
   <div>
     <button
       size="m"

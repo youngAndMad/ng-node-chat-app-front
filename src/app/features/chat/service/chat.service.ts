@@ -15,5 +15,13 @@ export class ChatService {
   create = (senderId: number, receiverId: number): Observable<{ id: number }> =>
     this._http.post<{ id: number }>('/api/v1/chat', { senderId, receiverId });
 
+  sendMessage = (
+    userId: number,
+    chatId: number,
+    content: string
+  ): Observable<any> => {
+    return this._http.post('/api/v1/message', { userId, chatId, content });
+  };
+
   getChats = (): Observable<Chat[]> => this._http.get<Chat[]>('/api/v1/chat');
 }
