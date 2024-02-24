@@ -22,6 +22,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FileService } from '../../file/services/file.service';
 import { Router } from '@angular/router';
 import { ChatService } from '../service/chat.service';
+import { Chat } from '../model/chat';
 
 interface Friends {
   list?: HTMLElement;
@@ -29,7 +30,7 @@ interface Friends {
   name: string;
 }
 
-interface Chat {
+interface IChat {
   container?: HTMLElement;
   current?: HTMLElement;
   person?: string;
@@ -48,6 +49,7 @@ export class ChatComponent implements OnInit {
   editProfileForm: FormGroup;
   userSearchForm: FormGroup;
   fetchedUsers: Observable<User[]>;
+  chats: Chat[];
 
   constructor(
     private readonly _socketIoService: SocketIoService,
@@ -103,7 +105,14 @@ export class ChatComponent implements OnInit {
 
     this.chatStyles();
 
-    this._chatService.getChats().subscribe(console.log);
+    this._chatService.getChats().subscribe((res) => {
+      this.chats = res;
+      console.log(this.chats);
+    });
+  }
+
+  getSecondMember(chat: Chat): User {
+    return chat.members.filter((member) => member.email !== this.user.email)[0];
   }
 
   showDialog(
@@ -142,7 +151,7 @@ export class ChatComponent implements OnInit {
 
       this.closeEditProfileModal();
 
-      this._toast.success('Profile updated successfully', '', {
+      this._toast.success('Username updated successfully', '', {
         timeOut: 2000,
       });
     });
@@ -202,7 +211,7 @@ export class ChatComponent implements OnInit {
       name: '',
     };
 
-    const chat: Chat = {
+    const chat: IChat = {
       container: document.querySelector('.container .right') as HTMLElement,
       current: undefined,
       person: undefined,
@@ -220,7 +229,7 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  setActiveChat(f: HTMLElement, friends: Friends, chat: Chat) {
+  setActiveChat(f: HTMLElement, friends: Friends, chat: IChat) {
     if (friends.list) {
       friends.list.querySelector('.active')?.classList.remove('active');
     }

@@ -1,4 +1,23 @@
-<p>user-list works!</p>
-<ng-container *ngFor="let user of users | async">
-  {{ user | json }}
-</ng-container>
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">User monitoring by admin </a>
+</nav>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Email Verified</th>
+      <th scope="col">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users | async">
+      <th scope="row">{{ user.id }}</th>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.emailVerified }}</td>
+      <td>{{ user.role }}</td>
+    </tr>
+  </tbody>
+</table>

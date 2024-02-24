@@ -34,7 +34,18 @@
         </tui-svg>
       </div>
       <ul class="people">
-        <li class="person" data-chat="person1">
+        <li
+          *ngFor="let chat of chats"
+          class="person"
+          id="dadadda"
+          [attr.data-chat]="'person' + chat.id"
+        >
+          <img alt="" [src]="imageLink(getSecondMember(chat).id)" />
+          <span class="name">{{ getSecondMember(chat).username }}</span>
+          <span class="time">2:09 PM</span>
+          <span class="preview">I was wondering...</span>
+        </li>
+        <!-- <li class="person" data-chat="person1">
           <img
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
             alt=""
@@ -42,7 +53,7 @@
           <span class="name">Thomas Bangalter</span>
           <span class="time">2:09 PM</span>
           <span class="preview">I was wondering...</span>
-        </li>
+        </li> -->
         <li class="person" data-chat="person2">
           <img
             src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/dog.png"
@@ -58,7 +69,12 @@
       <div class="top">
         <span>To: <span class="name">Dog Woofson</span></span>
       </div>
-      <div class="chat" data-chat="person1">
+
+      <div
+        class="chat"
+        *ngFor="let chat of chats"
+        [attr.data-chat]="'person' + chat.id"
+      >
         <div class="conversation-start">
           <span>Today, 6:48 AM</span>
         </div>
@@ -66,6 +82,16 @@
         <div class="bubble you">it's me.</div>
         <div class="bubble you">I was wondering...</div>
       </div>
+
+      <!-- <div class="chat" data-chat="person1">
+        <div class="conversation-start">
+          <span>Today, 6:48 AM</span>
+        </div>
+        <div class="bubble you">Hello,</div>
+        <div class="bubble you">it's me.</div>
+        <div class="bubble you">I was wondering...</div>
+      </div> -->
+
       <div class="chat" data-chat="person2">
         <div class="conversation-start">
           <span>Today, 5:38 PM</span>
@@ -160,9 +186,8 @@
   <form [formGroup]="userSearchForm">
     <div class="tui-form__row">
       <tui-input formControlName="query" tuiHintContent="Username" class="w-52">
-        Type
+        Username
         <input tuiTextfield [required]="true" />
-        <span class="tui-required"></span>
       </tui-input>
     </div>
     <ng-container *ngFor="let fetchUser of fetchedUsers | async" class="pt-8">

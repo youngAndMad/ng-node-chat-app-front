@@ -21,10 +21,12 @@ import { TuiSelectModule } from '@taiga-ui/kit';
 import { TuiInputDateModule } from '@taiga-ui/kit';
 import { TuiSvgModule } from '@taiga-ui/core';
 import { TuiDialogModule } from '@taiga-ui/core';
+import { TuiTableModule } from '@taiga-ui/addon-table';
 
 const modules: any[] = [
   TuiLinkModule,
   TuiSelectModule,
+  TuiTableModule,
   CommonModule,
   TuiDialogModule,
   TuiInputDateModule,
