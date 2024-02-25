@@ -39,12 +39,9 @@ export class AuthComponent implements OnInit {
     });
 
     this.registrationForm = this._fb.group({
-      email: ['kkraken2005@gmail.com', [Validators.required, Validators.email]],
-      password: ['password', [Validators.required, Validators.minLength(8)]],
-      username: [
-        'danekerscode',
-        [Validators.required, Validators.minLength(3)],
-      ],
+      email: [null, [Validators.required, Validators.email]],
+      password: [null, [Validators.required, Validators.minLength(8)]],
+      username: [null, [Validators.required, Validators.minLength(3)]],
     });
 
     this.otpForm = this._fb.group({

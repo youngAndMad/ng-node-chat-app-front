@@ -1,5 +1,7 @@
 export type Message = {
   chatId: number;
+  id: number;
   content: string;
-  userId: number;
+  senderId: number;
+  sentAt: Date;
 };

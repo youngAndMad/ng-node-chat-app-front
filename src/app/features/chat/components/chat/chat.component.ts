@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit {
   fetchedUsers: Observable<User[]>;
   chats: Chat[];
 
-  currentChat: Chat;
+  currentChat?: Chat;
 
   isContentLoaded: boolean = false;
 
@@ -84,7 +84,6 @@ export class ChatComponent implements OnInit {
             .getNewMessage()
             ?.pipe(
               filter((value: any) => {
-                console.log('value filter ', value);
                 return value !== '' && value.userId !== this.user.id;
               })
             )
@@ -140,6 +139,10 @@ export class ChatComponent implements OnInit {
         }
       });
 
+    this.loadChats();
+  }
+
+  loadChats() {
     this._chatService.getChats().subscribe((res) => {
       this.chats = res;
       this.currentChat = res[0];
@@ -149,7 +152,9 @@ export class ChatComponent implements OnInit {
   }
 
   getSecondMember(chat: Chat): User {
-    return chat.members.filter((member) => member.email !== this.user.email)[0];
+    return chat?.members?.filter(
+      (member) => member.email !== this.user.email
+    )[0];
   }
 
   getLastMessage(chat: Chat): Message {
@@ -166,7 +171,7 @@ export class ChatComponent implements OnInit {
       return;
     }
     this._chatService
-      .sendMessage(this.user.id, this.currentChat.id, message)
+      .sendMessage(this.user.id, this.currentChat!.id, message)
       .subscribe();
   }
 
@@ -249,7 +254,11 @@ export class ChatComponent implements OnInit {
   }
 
   createChat(id: number) {
-    this._chatService.create(this.user.id, id).subscribe(console.log);
+    this._chatService.create(this.user.id, id).subscribe(() => {
+      this._toast.success('Chat created successfully', 'Success');
+      this.modalSubscription.unsubscribe();
+      this.loadChats();
+    });
   }
 
   logout() {

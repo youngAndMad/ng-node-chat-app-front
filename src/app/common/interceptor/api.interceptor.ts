@@ -28,30 +28,31 @@ export class ApiInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     if (request.url.includes('api') || request.url.includes('socket')) {
       const modifiedReq = this.addAuthorizationHeader(request);
-      return next.handle(modifiedReq).pipe(
-        catchError((error) => {
-          if (error.status === 401 || error.status === 403) {
-            return this._authService
-              .refreshToken(
-                this._localStorageService.getItem<TokenDto>('tokens')
-                  ?.refreshToken!
-              )
-              .pipe(
-                switchMap(() => {
-                  const updatedReq = this.addAuthorizationHeader(modifiedReq);
-                  return next.handle(updatedReq);
-                }),
-                catchError((refreshError) => {
-                  console.error('Error refreshing token:', refreshError);
-                  this._router.navigate(['/user-login']);
-                  return throwError(error);
-                })
-              );
-          } else {
-            return throwError(error);
-          }
-        })
-      );
+      return next.handle(modifiedReq);
+      // .pipe(
+      //   catchError((error) => {
+      //     if (error.status === 401 || error.status === 403) {
+      //       return this._authService
+      //         .refreshToken(
+      //           this._localStorageService.getItem<TokenDto>('tokens')
+      //             ?.refreshToken!
+      //         )
+      //         .pipe(
+      //           switchMap(() => {
+      //             const updatedReq = this.addAuthorizationHeader(modifiedReq);
+      //             return next.handle(updatedReq);
+      //           }),
+      //           catchError((refreshError) => {
+      //             console.error('Error refreshing token:', refreshError);
+      //             this._router.navigate(['/user-login']);
+      //             return throwError(error);
+      //           })
+      //         );
+      //     } else {
+      //       return throwError(error);
+      //     }
+      //   })
+      // );
     }
     return next.handle(request);
   }

@@ -47,7 +47,7 @@
         </li>
       </ul>
     </div>
-    <div class="right" *ngIf="isContentLoaded">
+    <div class="right" *ngIf="currentChat">
       <div class="top">
         <span
           >To:
@@ -57,14 +57,22 @@
         >
       </div>
 
-      <div class="chat" *ngFor="let chat of chats">
+      <div class="chat" *ngIf="currentChat; else noAnyChats">
         <div class="conversation-start">
-          <span>Today, 6:48 AM</span>
+          <span>{{
+            getLastMessage(currentChat).sentAt | date : "dd/MM/yyyy hh:mm a"
+          }}</span>
         </div>
-        <div class="bubble you bg-blue-500">Hello,</div>
-        <div class="bubble you bg-blue-500">it's me.</div>
-        <div class="bubble you bg-blue-500">I was wondering...</div>
-        <div class="bubble me bg-blue-500">I danekers</div>
+        <div
+          *ngFor="let message of currentChat.messages"
+          [ngClass]="{
+            bubble: true,
+            me: message.senderId === user.id,
+            you: message.senderId !== user.id
+          }"
+        >
+          {{ message.content }}
+        </div>
       </div>
 
       <div class="write">
@@ -78,7 +86,11 @@
     </div>
   </div>
 </div>
-
+<ng-template #noAnyChats>
+  <div class="chat">
+    <div class="bubble">No any chats. Find users and try to start chat</div>
+  </div>
+</ng-template>
 <ng-template let-observed #editProfile>
   <form [formGroup]="editProfileForm" (submit)="onEditUsername()">
     <div class="flex flex-col justify-center">
