@@ -13,11 +13,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeComponent } from './shared/components/home/home.component';
 import { ChatModule } from './features/chat/chat.module';
 import { UserModule } from './features/user/user.module';
-import { NotFoundComponent } from './shared/components/not-found/not-found.component';
-import { CapitalizePipe } from './common/pipe/capitalize.pipe';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NotFoundComponent, CapitalizePipe],
+  declarations: [AppComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -27,7 +25,7 @@ import { CapitalizePipe } from './common/pipe/capitalize.pipe';
     BrowserAnimationsModule,
     FileModule,
     ChatModule,
-    UserModule
+    UserModule,
   ],
   providers: [
     { useClass: ApiInterceptor, multi: true, provide: HTTP_INTERCEPTORS },

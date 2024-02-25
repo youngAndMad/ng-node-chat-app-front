@@ -11,7 +11,6 @@ import { EnvService } from '../service/env.service';
 import { TokenDto } from 'src/app/features/auth/model/token.dto';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { Router } from '@angular/router';
-import { Token } from '@angular/compiler';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {

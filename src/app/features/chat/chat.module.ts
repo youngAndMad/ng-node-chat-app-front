@@ -5,10 +5,9 @@ import { CommonModule } from '@angular/common';
 import { ChatComponent } from './components/chat/chat.component';
 import { TuiModule } from 'src/app/shared/tui/tui.module';
 import { ToastrModule } from 'ngx-toastr';
-import { SingleChatComponent } from './components/single-chat/single-chat.component';
 
 @NgModule({
-  declarations: [ChatComponent, SingleChatComponent],
+  declarations: [ChatComponent],
   imports: [
     CommonModule,
     TuiModule,

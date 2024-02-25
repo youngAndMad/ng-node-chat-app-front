@@ -15,7 +15,6 @@ export class AppComponent {
 
   @HostListener('window:beforeunload', ['$event'])
   beforeUnload(event: any) {
-    console.log('window:beforeunload', event);
     let user = this._localStorageService.getProfile();
     if (!user) {
       return;
