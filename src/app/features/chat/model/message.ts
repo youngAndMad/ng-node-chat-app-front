@@ -3,5 +3,5 @@ export type Message = {
   id: number;
   content: string;
   senderId: number;
-  sentAt: Date;
+  sentTime: Date;
 };

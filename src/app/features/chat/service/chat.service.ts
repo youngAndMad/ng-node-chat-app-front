@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Chat } from '../model/chat';
+import { Message } from '../model/message';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +20,8 @@ export class ChatService {
     userId: number,
     chatId: number,
     content: string
-  ): Observable<any> => {
-    return this._http.post('/api/v1/message', { userId, chatId, content });
-  };
+  ): Observable<Message> =>
+    this._http.post<Message>('/api/v1/message', { userId, chatId, content });
 
   getChats = (): Observable<Chat[]> => this._http.get<Chat[]>('/api/v1/chat');
 }

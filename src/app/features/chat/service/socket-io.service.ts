@@ -21,9 +21,6 @@ export class SocketIoService {
   ) {}
 
   connect() {
-    console.log(
-      this._localStorageService.getItem<TokenDto>('tokens')?.accessToken
-    );
     this.socket = io(this._envService.socketUrl, {
       auth: {
         token:

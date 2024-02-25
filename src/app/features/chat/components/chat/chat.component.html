@@ -34,16 +34,13 @@
         </tui-svg>
       </div>
       <ul class="people">
-        <li
-          *ngFor="let chat of chats"
-          class="person"
-          id="dadadda"
-          [attr.data-chat]="'person' + chat.id"
-        >
+        <li *ngFor="let chat of chats" class="person" id="dadadda">
           <img alt="" [src]="imageLink(getSecondMember(chat).id)" />
           <span class="name">{{ getSecondMember(chat).username }}</span>
-          <span class="time">2:09 PM</span>
-          <span class="preview">I was wondering...</span>
+          <span class="time">{{
+            (getLastMessage(chat)?.sentTime | date : "dd/MM/yyyy hh:mm a") || ""
+          }}</span>
+          <span class="preview">{{ getLastMessage(chat)?.content || "" }}</span>
         </li>
       </ul>
     </div>
@@ -57,10 +54,16 @@
         >
       </div>
 
-      <div class="chat" *ngIf="currentChat; else noAnyChats">
+      <div
+        class="chat"
+        *ngIf="
+          currentChat && currentChat.messages && currentChat.messages.length > 0
+        "
+      >
         <div class="conversation-start">
           <span>{{
-            getLastMessage(currentChat).sentAt | date : "dd/MM/yyyy hh:mm a"
+            "Chat started at: " +
+              (currentChat.createdTime | date : "dd/MM/yyyy hh:mm a")
           }}</span>
         </div>
         <div
@@ -76,21 +79,19 @@
       </div>
 
       <div class="write">
-        <input type="text" #messageInput />
-        <a
-          href="javascript:;"
-          class="write-link send"
-          (click)="sendMessage(messageInput.value!)"
-        ></a>
+        <form [formGroup]="messageForm" #messageFormHTML>
+          <input type="text" [required]="true" formControlName="value" />
+          <a
+            href="javascript:;"
+            class="write-link send"
+            (click)="sendMessage()"
+          ></a>
+        </form>
       </div>
     </div>
   </div>
 </div>
-<ng-template #noAnyChats>
-  <div class="chat">
-    <div class="bubble">No any chats. Find users and try to start chat</div>
-  </div>
-</ng-template>
+
 <ng-template let-observed #editProfile>
   <form [formGroup]="editProfileForm" (submit)="onEditUsername()">
     <div class="flex flex-col justify-center">

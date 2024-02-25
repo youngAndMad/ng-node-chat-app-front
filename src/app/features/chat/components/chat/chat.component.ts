@@ -40,12 +40,12 @@ export class ChatComponent implements OnInit {
   user: User;
   editProfileForm: FormGroup;
   userSearchForm: FormGroup;
+  messageForm: FormGroup;
+
   fetchedUsers: Observable<User[]>;
   chats: Chat[];
 
   currentChat?: Chat;
-
-  isContentLoaded: boolean = false;
 
   constructor(
     private readonly _socketIoService: SocketIoService,
@@ -63,6 +63,9 @@ export class ChatComponent implements OnInit {
     this.userSearchForm = this._fb.group({
       query: [],
     });
+    this.messageForm = this._fb.group({
+      value: [null, Validators.required],
+    });
   }
 
   ngOnInit(): void {
@@ -76,7 +79,6 @@ export class ChatComponent implements OnInit {
           return new Observable<never>();
         })
       )
-
       .subscribe((isConnected) => {
         if (isConnected === true) {
           console.log('isConnected', isConnected);
@@ -88,9 +90,9 @@ export class ChatComponent implements OnInit {
               })
             )
             .subscribe((msg) => {
-              console.log('new message from socket io', msg);
+              this.currentChat?.messages.push(msg);
+              this._cdr.detectChanges();
             });
-          this._socketIoService.sendMessage('daneker sila');
         }
       });
 
@@ -145,8 +147,10 @@ export class ChatComponent implements OnInit {
   loadChats() {
     this._chatService.getChats().subscribe((res) => {
       this.chats = res;
-      this.currentChat = res[0];
-      this.isContentLoaded = true;
+      if (res.length !== 0) {
+        this.currentChat = res[0];
+      }
+
       this._cdr.detectChanges();
     });
   }
@@ -157,22 +161,35 @@ export class ChatComponent implements OnInit {
     )[0];
   }
 
-  getLastMessage(chat: Chat): Message {
-    return chat.messages.slice(-1)[0];
+  getLastMessage(chat: Chat): Message | undefined {
+    if (chat.messages && chat.messages.length > 0) {
+      console.log('wanna return ', chat.messages[chat.messages.length - 1]);
+      return chat.messages[chat.messages.length - 1];
+    } else {
+      console.log('wanna return undefined');
+      return undefined;
+    }
   }
 
   onSelectChat(chat: Chat) {
     this.currentChat = chat;
   }
 
-  sendMessage(message: string) {
-    if (!message || message === '') {
+  sendMessage() {
+    if (!this.messageForm.valid) {
       this._toast.error('Can not send empty message', 'Error');
       return;
     }
+
+    let message = this.messageForm.get('value')!.value;
+
     this._chatService
       .sendMessage(this.user.id, this.currentChat!.id, message)
-      .subscribe();
+      .subscribe((savedMessage) => {
+        this.currentChat?.messages.push(savedMessage);
+        this.messageForm.reset();
+        this._cdr.detectChanges();
+      });
   }
 
   showDialog(
