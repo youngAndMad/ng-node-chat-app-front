@@ -20,8 +20,7 @@ export class AppComponent {
     if (!user) {
       return;
     }
-    [1, 2, 4, 5].forEach((id) => {
-      this._userService.clearSocket(id).subscribe();
-    });
+
+    this._userService.clearSocket(user.id).subscribe();
   }
 }

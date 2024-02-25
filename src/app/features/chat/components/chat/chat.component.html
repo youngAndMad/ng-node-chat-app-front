@@ -55,6 +55,19 @@
                   | date : "dd/MM/yyyy hh:mm a") || ""
               }}
             </div>
+            <div class="ml-2">
+              <span
+                class="inline-block h-2 w-2 rounded-full bg-green-500"
+                [ngClass]="{
+                  'inline-block': true,
+                  'h-2': true,
+                  'w-2': true,
+                  'rounded-full': true,
+                  'bg-green-500': isUserOnline(getSecondMember(chat).id),
+                  'bg-red-500': !isUserOnline(getSecondMember(chat).id),
+                }"
+              ></span>
+            </div>
           </div>
         </li>
       </ul>

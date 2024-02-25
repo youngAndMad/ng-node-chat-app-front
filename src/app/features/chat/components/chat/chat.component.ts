@@ -146,10 +146,14 @@ export class ChatComponent implements OnInit {
     this._socketIoService.onlineUsers$.subscribe((data) => {
       this.onlineUsers = data;
       console.log('fetched online user list', data);
+      this._cdr.detectChanges();
     });
 
     this.loadChats();
   }
+
+  isUserOnline = (id: number) =>
+    this.onlineUsers.some((userId) => userId === id);
 
   loadChats() {
     this._chatService.getChats().subscribe((res) => {
