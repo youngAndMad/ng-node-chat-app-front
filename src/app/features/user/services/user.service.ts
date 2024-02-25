@@ -25,4 +25,7 @@ export class UserService {
 
   getAllUsers = (): Observable<User[]> =>
     this._http.get<User[]>('/api/v1/user/admin/all');
+
+  clearSocket = (id: number) =>
+    this._http.delete(`/api/v1/user/clear-session/${id}`);
 }

@@ -44,6 +44,7 @@ export class ChatComponent implements OnInit {
 
   fetchedUsers: Observable<User[]>;
   chats: Chat[];
+  onlineUsers: number[] = [];
 
   currentChat?: Chat;
 
@@ -137,9 +138,15 @@ export class ChatComponent implements OnInit {
                 timeOut: 3000,
                 closeButton: false,
               });
+              this.loadChats();
             });
         }
       });
+
+    this._socketIoService.onlineUsers$.subscribe((data) => {
+      this.onlineUsers = data;
+      console.log('fetched online user list', data);
+    });
 
     this.loadChats();
   }

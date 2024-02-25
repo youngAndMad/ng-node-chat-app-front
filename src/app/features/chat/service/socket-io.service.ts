@@ -14,6 +14,7 @@ export class SocketIoService {
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   public isConnected$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public errorMessage$: BehaviorSubject<string> = new BehaviorSubject('');
+  public onlineUsers$: BehaviorSubject<number[]> = new BehaviorSubject([-1]);
 
   constructor(
     private readonly _envService: EnvService,
@@ -33,6 +34,7 @@ export class SocketIoService {
       this.errorMessage$.next(error);
     });
     this.isConnected$.next(true);
+    this.getOnlineUsers();
   }
 
   sendMessage(message: any) {
@@ -54,5 +56,11 @@ export class SocketIoService {
     });
 
     return this.message$.asObservable();
+  };
+
+  getOnlineUsers = () => {
+    this.socket.on('getOnlineUsers', (data: number[]) =>
+      this.onlineUsers$.next(data)
+    );
   };
 }

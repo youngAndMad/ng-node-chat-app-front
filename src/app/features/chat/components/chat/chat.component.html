@@ -34,13 +34,28 @@
         </tui-svg>
       </div>
       <ul class="people">
-        <li *ngFor="let chat of chats" class="person" id="dadadda">
-          <img alt="" [src]="imageLink(getSecondMember(chat).id)" />
-          <span class="name">{{ getSecondMember(chat).username }}</span>
-          <span class="time">{{
-            (getLastMessage(chat)?.sentTime | date : "dd/MM/yyyy hh:mm a") || ""
-          }}</span>
-          <span class="preview">{{ getLastMessage(chat)?.content || "" }}</span>
+        <li *ngFor="let chat of chats" class="person">
+          <div class="flex items-center border-b border-gray-200 py-3">
+            <tui-avatar
+              size="m"
+              [avatarUrl]="imageLink(getSecondMember(chat).id)"
+              fallback="tuiIconUserLarge"
+              new
+              class="mr-3"
+            ></tui-avatar>
+            <div class="flex flex-col flex-grow">
+              <div class="font-bold">{{ getSecondMember(chat).username }}</div>
+              <div class="text-sm text-gray-600">
+                {{ getLastMessage(chat)?.content || "" }}
+              </div>
+            </div>
+            <div class="ml-auto text-sm text-gray-500">
+              {{
+                (getLastMessage(chat)?.sentTime
+                  | date : "dd/MM/yyyy hh:mm a") || ""
+              }}
+            </div>
+          </div>
         </li>
       </ul>
     </div>
