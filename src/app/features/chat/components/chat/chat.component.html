@@ -35,7 +35,10 @@
       </div>
       <ul class="people">
         <li *ngFor="let chat of chats" class="person">
-          <div class="flex items-center border-b border-gray-200 py-3">
+          <div
+            class="flex items-center border-b border-gray-200 py-3"
+            (click)="onSelectChat(chat)"
+          >
             <tui-avatar
               size="m"
               [avatarUrl]="imageLink(getSecondMember(chat).id)"
