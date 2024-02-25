@@ -6,12 +6,13 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { debounceTime, filter } from 'rxjs/operators';
+import { catchError, debounceTime, filter } from 'rxjs/operators';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { LocalStorageService } from 'src/app/common/service/local-storage.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-auth',
@@ -31,7 +32,8 @@ export class AuthComponent implements OnInit {
     private readonly _authService: AuthService,
     @Inject(TuiDialogService) private readonly _dialogs: TuiDialogService,
     private readonly _localStorageService: LocalStorageService,
-    private readonly _router: Router
+    private readonly _router: Router,
+    private readonly _toast: ToastrService
   ) {
     this.loginForm = this._fb.group({
       email: [null, [Validators.required, Validators.email]],
@@ -71,17 +73,32 @@ export class AuthComponent implements OnInit {
   }
 
   onLoginFormSubmit() {
-    this._authService.login(this.loginForm.value).subscribe((response) => {
-      this._localStorageService.setItem('tokens', response.tokens);
-      this._localStorageService.setProfile(response.user);
+    this._authService
+      .login(this.loginForm.value)
+      .pipe(
+        catchError((error) => {
+          this._toast.error(error.error.err.message, error.statusText);
+          return of();
+        })
+      )
+      .subscribe((response) => {
+        this._localStorageService.setItem('tokens', response.tokens);
+        this._localStorageService.setProfile(response.user);
 
-      this._router.navigate(['/home']);
-    });
+        this._router.navigate(['/home']);
+      });
   }
 
   onRegistrationFormSubmit() {
     this._authService
       .register(this.registrationForm.value)
+      .pipe(
+        catchError((error) => {
+          console.log(error);
+          this._toast.error(error.error.err.message, error.statusText);
+          return of();
+        })
+      )
       .subscribe((user) => {
         if (user) {
           this._localStorageService.setProfile(user);
